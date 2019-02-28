@@ -37,17 +37,19 @@ var last_direction = Vector2()
 var dash_cnt = 0
 var controller
 
-onready var sprite = $Sprite
+onready var sprite = $PlayerSprite
 onready var sprite_scale = sprite.scale.x
 
 func _ready():
-	controller = get_tree().get_root().get_node("World").find_node("PlayerController")
-	controller.connect("p1_start", self, "_on_player_start")
-	controller.connect("p1_dash", self, "_on_player_dash")
-	controller.connect("p1_jump", self, "_on_player_jump")
-	controller.connect("p1_left", self, "_on_player_left")
-	controller.connect("p1_right", self, "_on_player_right")
-	controller.connect("p1_stop", self, "_on_player_stop")
+	controller = get_parent()
+	controller.connect("action_start", self, "_on_player_start")
+	controller.connect("action_dash", self, "_on_player_dash")
+	controller.connect("action_jump", self, "_on_player_jump")
+	controller.connect("action_left", self, "_on_player_left")
+	controller.connect("action_right", self, "_on_player_right")
+	controller.connect("action_stop", self, "_on_player_stop")
+	print(position)
+	#(630, 178)
 	
 func _is_state(state):
 	return (curr_state & state) == state
@@ -193,5 +195,5 @@ func _physics_process(delta):
 	if movement.y != 0:
 		angle *= 1.5
 	
-	rotate(angle)
+	#rotate(angle)
 	
