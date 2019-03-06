@@ -36,9 +36,16 @@ var curr_state = NO_STATE
 var last_direction = Vector2()
 var dash_cnt = 0
 var controller
+var _score = 0
+var _number = 0
 
 onready var sprite = $PlayerSprite
 onready var sprite_scale = sprite.scale.x
+onready var score_label = $ScoreLabel
+
+func init(number, position_x):
+	_number = number
+	self.position.x += position_x
 
 func _ready():
 	controller = get_parent()
@@ -195,5 +202,20 @@ func _physics_process(delta):
 	if movement.y != 0:
 		angle *= 1.5
 	
+	
+	
 	#rotate(angle)
+
+func get_number():
+	return _number
+
+func get_score():
+	return _score
+
+func _update_score_label():
+	score_label.text = str(_score)
+
+func increment_score_by(number):
+	_score += number
+	_update_score_label()
 	
