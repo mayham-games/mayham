@@ -30,6 +30,22 @@ var _len = 0
 func size():
 	return _len
 
+func print_list():
+	if _len == 0:
+		print("empty list")
+		return
+	var temp = _head
+	while temp != null:
+		print_item(temp)
+		temp = temp.next
+
+func print_item(item):
+	if item == _head:
+		print("start")
+	print(" prev: ", item.previous, " data: ", item.data, " next: ", item.next)
+	if item == _tail:
+		print("end")
+
 func push_front(val):
 	if _len == 0:
 		_head = LinkedListItem.new(val)
@@ -56,6 +72,8 @@ func pop_front():
 	else:
 		var result = _head.data
 		_head = _head.next
+		if _head != null:
+			_head.previous = null
 		_len -= 1
 		return result
 
@@ -65,6 +83,8 @@ func pop_back():
 	else:
 		var result = _tail.data
 		_tail = _tail.previous
+		if _tail != null:
+			_tail.next = null
 		_len -= 1
 		return result
 
