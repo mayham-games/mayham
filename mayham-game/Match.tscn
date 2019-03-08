@@ -4,6 +4,7 @@
 
 [node name="Match" type="Node"]
 
+editor/display_folded = true
 script = ExtResource( 1 )
 
 [node name="UI_Placeholder" type="Node" parent="." index="0"]
