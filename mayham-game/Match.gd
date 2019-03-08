@@ -8,7 +8,7 @@ var time_remaining = 0
 onready var game = preload("res://FlatMap.tscn")
 onready var playerController = preload("res://PlayerController.tscn")
 # game rules
-onready var num_players = 1
+onready var num_players = 2
 onready var time_limit = 180 # 3 min
 
 func _ready():

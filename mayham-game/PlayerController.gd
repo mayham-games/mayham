@@ -18,21 +18,21 @@ func _ready():
 	print("PC ready ", player_num)
 	
 func _input(event):
-	if event.is_action_pressed("ui_start"):
+	if event.is_action_pressed("p" + str(player_num) + "_start"):
 		emit_signal("action_start")
-	if event.is_action_pressed("ui_jump"):
+	if event.is_action_pressed("p" + str(player_num) + "_jump"):
 		emit_signal("action_jump")
-	if event.is_action_pressed("ui_dash"):
+	if event.is_action_pressed("p" + str(player_num) + "_dash"):
 		emit_signal("action_dash")
-	if event.is_action_pressed("ui_left"):
+	if event.is_action_pressed("p" + str(player_num) + "_left"):
 		emit_signal("action_left")
-	elif event.is_action_pressed("ui_right"):
+	elif event.is_action_pressed("p" + str(player_num) + "_right"):
 		emit_signal("action_right")
-	if event.is_action_released("ui_right") or event.is_action_released("ui_left"):
+	if event.is_action_released("p" + str(player_num) + "_right") or event.is_action_released("p" + str(player_num) + "_left"):
 		emit_signal("action_stop")
 
 func _process(delta):
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed("p" + str(player_num) + "_left"):
 		emit_signal("action_left")
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed("p" + str(player_num) + "_right"):
 		emit_signal("action_right")
