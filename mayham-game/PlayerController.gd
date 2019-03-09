@@ -6,6 +6,7 @@ signal action_left
 signal action_right
 signal action_dash
 signal action_stop
+signal action_attack
 
 var player_num = 0
 
@@ -30,6 +31,8 @@ func _input(event):
 		emit_signal("action_right")
 	if event.is_action_released("ui_right") or event.is_action_released("ui_left"):
 		emit_signal("action_stop")
+	if event.is_action_pressed("ui_attack"):
+		emit_signal("action_attack")
 
 func _process(delta):
 	if Input.is_action_pressed("ui_left"):
