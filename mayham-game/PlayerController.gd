@@ -8,15 +8,19 @@ signal action_dash
 signal action_stop
 signal action_attack
 
-var player_num = 0
+var playerDoll = null
+var number = 0
 
-onready var player = preload("res://Player.tscn")
+func init(num):
+	number = num
 
 func _ready():
-	var playerDoll = player.instance()
-	playerDoll.position.x += 100 * (player_num - 5)
+	var position_x = 100 * (number - 5)
+	var player = ResourceLoader.load("res://Player.tscn")
+	playerDoll = player.instance()
 	add_child(playerDoll)
-	print("PC ready ", player_num)
+	playerDoll.init(number, position_x)
+	print("PC ready ", number)
 	
 func _input(event):
 	if event.is_action_pressed("ui_start"):
@@ -39,3 +43,6 @@ func _process(delta):
 		emit_signal("action_left")
 	elif Input.is_action_pressed("ui_right"):
 		emit_signal("action_right")
+
+func get_player():
+	return playerDoll
