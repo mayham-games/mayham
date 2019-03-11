@@ -37,8 +37,11 @@ var wall_jump_dir = NO_DIR
 var jump_cnt = 1
 var dash_cnt = 0
 var last_input_direction = Vector2(0, 0)
-var score = 0
+var _score = 0
+var _number = 0
 var cooldown_time = 0
+# Nodes
+onready var score_label = $ScoreLabel
 
 ## State Spaces **see achitecture documents for explanation on states
 # Constants
@@ -90,7 +93,10 @@ func _ready():
 	controller.connect("action_stop", self, "_on_player_stop")
 	controller.connect("action_attack", self, "_on_player_attack")
 	print(position)
-	#(630, 178)	
+	
+func init(number, position_x):
+	_number = number
+	self.position.x += position_x
 	
 func _on_player_start():
 	print("START")
@@ -130,27 +136,21 @@ func _print_debug():
 	
 	
 func _on_player_dash():
-	#print("DASH")
 	input_queue.append(ACTIONS.dash)
 
 func _on_player_jump():
-	#print("JUMP")
 	input_queue.append(ACTIONS.jump)
 
 func _on_player_left():
-	#print("LEFT")
 	input_queue.append(ACTIONS.left)
 
 func _on_player_right():
-	#print("RIGHT")
 	input_queue.append(ACTIONS.right)
 
 func _on_player_attack():
-	#print("ATTACK")
 	input_queue.append(ACTIONS.attack)
 
 func _on_player_stop():
-	#print("STOP")
 	input_queue.append(ACTIONS.stop)
 
 func _execute_player_dash():
@@ -269,9 +269,20 @@ func _physics_process(delta):
 		curr_velocity.y = min(TERMINAL_GRAVITY_VELOCITY, curr_velocity.y + GRAVITY_ACCEL)
 
 	# move
-	#print(curr_velocity)
 	move_and_slide(curr_velocity, UP_DIR)
-	#print("after:", curr_velocity)
-	# update world state
+
 	_update_world_state()
+
+func get_number():
+	return _number
+				
+func get_score():
+	return _score
+				
+func _update_score_label():
+	score_label.text = str(_score)
+				
+func increment_score_by(number):
+	_score += number
+	_update_score_label()
 	
