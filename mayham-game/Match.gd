@@ -1,15 +1,15 @@
 extends Node
 
-# public vars
-# game rules
-var time_remaining = 0
-
 # onready vars
 # game rules
 onready var num_players = 2
 onready var time_limit = 180 # 3 min
+onready var time_remaining = time_limit
 onready var winning_score = 50
-onready var goal_interval = 20
+onready var _goal_max = 20
+onready var _goal_min = 4
+onready var goal_interval = _goal_max - _goal_min
+onready var goal_move_time = goal_interval
 
 var _timer = null
 var _map = null
@@ -28,9 +28,6 @@ func _ready():
 		players.append(playerControl.get_player())
 	_map.init(players)
 	
-	# set the time limit
-	time_remaining = time_limit
-	
 	_timer = Timer.new()
 	add_child(_timer)
 	_timer.connect("timeout", self, "_on_Timer_timeout")
@@ -39,9 +36,17 @@ func _ready():
 	_timer.start()
 
 func _on_Timer_timeout():
-	_map.award_points()
-	time_remaining -= 1
-	_map.update_timer(time_remaining)
+	if goal_move_time == 0:
+		goal_move_time = randi() % goal_interval + _goal_min
+		_move_goal()
+	else:
+		goal_move_time -= 1
+		time_remaining -= 1
+		_map.award_points()
+		_map.update_timer(time_remaining)
+
+func _move_goal():
+	_map.move_goal()
 
 func _process(delta):
 	# Called every frame. Delta is time since last frame.
