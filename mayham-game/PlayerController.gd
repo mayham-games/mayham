@@ -35,7 +35,7 @@ func _input(event):
 		emit_signal("action_right")
 	if event.is_action_released("p" + str(number) + "_right") or event.is_action_released("p" + str(number) + "_left"):
 		emit_signal("action_stop")
-	if event.is_action_pressed("ui_attack"):
+	if event.is_action_pressed("p" + str(number) + "_attack"):
 		emit_signal("action_attack")
 
 func _process(delta):
