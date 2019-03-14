@@ -1,0 +1,156 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://FlatMap.gd" type="Script" id=1]
+[ext_resource path="res://map0_back.jpg" type="Texture" id=2]
+[ext_resource path="res://TempWall.tscn" type="PackedScene" id=3]
+[ext_resource path="res://map0_terrain.png" type="Texture" id=4]
+[ext_resource path="res://Goal.gd" type="Script" id=5]
+[ext_resource path="res://goal1.png" type="Texture" id=6]
+[ext_resource path="res://fonts/KOMIKAX_.ttf" type="DynamicFontData" id=7]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+custom_solver_bias = 0.0
+extents = Vector2( 18.5369, 10 )
+
+[sub_resource type="RectangleShape2D" id=2]
+
+custom_solver_bias = 0.0
+extents = Vector2( 34.5644, 32.2657 )
+
+[sub_resource type="DynamicFont" id=3]
+
+size = 60
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 7 )
+_sections_unfolded = [ "Font", "Settings" ]
+
+[node name="FlatMap" type="Node"]
+
+script = ExtResource( 1 )
+
+[node name="TempBackground" type="Sprite" parent="." index="0"]
+
+position = Vector2( 504.595, 293.884 )
+scale = Vector2( 0.580088, 0.580088 )
+texture = ExtResource( 2 )
+_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index" ]
+
+[node name="TempWall" parent="." index="1" instance=ExtResource( 3 )]
+
+position = Vector2( 34.6173, -49.2853 )
+
+[node name="TempFloor" type="StaticBody2D" parent="." index="2"]
+
+editor/display_folded = true
+position = Vector2( 497.413, 561.869 )
+scale = Vector2( 19.2795, 1.18937 )
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="TempFloor" index="0"]
+
+position = Vector2( -0.0788964, -213.676 )
+scale = Vector2( 0.031222, 0.506101 )
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TempFloor" index="1"]
+
+position = Vector2( -0.0620611, -0.328772 )
+scale = Vector2( 1.7209, 3.15355 )
+shape = SubResource( 1 )
+
+[node name="StageTileMap" type="TileMap" parent="." index="3"]
+
+mode = 0
+tile_set = null
+cell_size = Vector2( 64, 64 )
+cell_quadrant_size = 16
+cell_custom_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+cell_half_offset = 2
+cell_tile_origin = 0
+cell_y_sort = false
+cell_clip_uv = false
+collision_use_kinematic = false
+collision_friction = 1.0
+collision_bounce = 0.0
+collision_layer = 1
+collision_mask = 1
+occluder_light_mask = 1
+format = 1
+tile_data = PoolIntArray(  )
+
+[node name="Goal" type="Area2D" parent="." index="4"]
+
+modulate = Color( 0.96875, 0.864449, 0.0151367, 1 )
+self_modulate = Color( 0.914062, 0.0535583, 0.0535583, 1 )
+position = Vector2( 771.78, 400 )
+scale = Vector2( 1.74313, 4 )
+input_pickable = true
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+audio_bus_override = false
+audio_bus_name = "Master"
+script = ExtResource( 5 )
+_sections_unfolded = [ "Collision", "Material", "Pause", "Transform", "Visibility" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="GoalCollision" type="CollisionShape2D" parent="Goal" index="0"]
+
+position = Vector2( -0.742767, 0 )
+scale = Vector2( 0.980492, 1 )
+shape = SubResource( 2 )
+_sections_unfolded = [ "Transform", "Visibility" ]
+
+[node name="Sprite" type="Sprite" parent="Goal" index="1"]
+
+position = Vector2( -0.0868725, 20.4342 )
+scale = Vector2( 0.0354167, 0.0211 )
+z_index = 10
+texture = ExtResource( 6 )
+_sections_unfolded = [ "Material", "Offset", "Region", "Transform", "Visibility", "Z Index" ]
+
+[node name="TempWall3" parent="." index="5" instance=ExtResource( 3 )]
+
+position = Vector2( 988.617, -13.2851 )
+
+[node name="TempWall2" parent="." index="6" instance=ExtResource( 3 )]
+
+position = Vector2( 273.617, -252.285 )
+
+[node name="MatchTime" type="Label" parent="." index="7"]
+
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 0.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "180"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Anchor", "Focus", "Grow Direction", "Hint", "Margin", "Material", "Mouse", "Pause", "Rect", "Size Flags", "Theme", "Visibility", "custom_colors", "custom_fonts", "custom_styles" ]
+
+
