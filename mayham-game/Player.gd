@@ -65,8 +65,8 @@ func init(number, position_x):			#|
 func _ready():
 	controller = get_parent()
 	controller.connect("action_start", self, "_on_player_start")
-	#controller.connect("action_dash", self, "_on_player_dash")		# comment this line out and
-	controller.connect("action_dash", self, "_hit_test")			# this line in to test getting hit
+	controller.connect("action_dash", self, "_on_player_dash")		# comment this line out and
+	#controller.connect("action_dash", self, "_hit_test")			# this line in to test getting hit
 	controller.connect("action_jump", self, "_on_player_jump")
 	controller.connect("action_left", self, "_on_player_left")
 	controller.connect("action_right", self, "_on_player_right")
