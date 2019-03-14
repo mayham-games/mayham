@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://FlatMap.gd" type="Script" id=1]
 [ext_resource path="res://map0_back.jpg" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://map0_terrain.png" type="Texture" id=4]
 [ext_resource path="res://Goal.gd" type="Script" id=5]
 [ext_resource path="res://goal1.png" type="Texture" id=6]
+[ext_resource path="res://fonts/KOMIKAX_.ttf" type="DynamicFontData" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -16,6 +17,14 @@ extents = Vector2( 18.5369, 10 )
 
 custom_solver_bias = 0.0
 extents = Vector2( 34.5644, 32.2657 )
+
+[sub_resource type="DynamicFont" id=3]
+
+size = 60
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 7 )
+_sections_unfolded = [ "Font", "Settings" ]
 
 [node name="FlatMap" type="Node"]
 
@@ -124,20 +133,17 @@ position = Vector2( 273.617, -252.285 )
 
 [node name="MatchTime" type="Label" parent="." index="7"]
 
-anchor_left = 0.0
+anchor_left = 0.5
 anchor_top = 0.0
-anchor_right = 0.0
+anchor_right = 0.5
 anchor_bottom = 0.0
-margin_left = 475.0
-margin_top = -3.0
-margin_right = 562.0
-margin_bottom = 84.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "180"
 align = 1
