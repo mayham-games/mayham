@@ -304,3 +304,7 @@ func increment_score_by(number):		#|
 	_score += number					#|
 	_update_score_label()				#|
 #-----------------------------------------
+
+func reset_score():
+	_score = 0
+	_update_score_label()
