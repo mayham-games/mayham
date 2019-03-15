@@ -1,11 +1,11 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://FlatMap.gd" type="Script" id=1]
-[ext_resource path="res://map0_back.jpg" type="Texture" id=2]
-[ext_resource path="res://TempWall.tscn" type="PackedScene" id=3]
-[ext_resource path="res://map0_terrain.png" type="Texture" id=4]
-[ext_resource path="res://Goal.gd" type="Script" id=5]
-[ext_resource path="res://goal1.png" type="Texture" id=6]
+[ext_resource path="res://match/stages/basic_stage/FlatMap.gd" type="Script" id=1]
+[ext_resource path="res://art/stages/basic_stage/map0_back.jpg" type="Texture" id=2]
+[ext_resource path="res://match/stages/basic_stage/TempWall.tscn" type="PackedScene" id=3]
+[ext_resource path="res://art/stages/basic_stage/map0_terrain.png" type="Texture" id=4]
+[ext_resource path="res://match/stages/goal/Goal.gd" type="Script" id=5]
+[ext_resource path="res://art/stages/basic_stage/goal1.png" type="Texture" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 

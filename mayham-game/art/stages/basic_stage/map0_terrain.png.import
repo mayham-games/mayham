@@ -2,12 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/map0_terrain.png-799169a4f8a370b512e42a0c3a14e2cb.stex"
+path="res://.import/map0_terrain.png-2429869a2eda9e4e63611cdbdb9d48a8.stex"
 
 [deps]
 
-source_file="res://map0_terrain.png"
-dest_files=[ "res://.import/map0_terrain.png-799169a4f8a370b512e42a0c3a14e2cb.stex" ]
+source_file="res://art/stages/basic_stage/map0_terrain.png"
+source_md5="38a5dd9f83146a0151aa5f0290512b7d"
+
+dest_files=[ "res://.import/map0_terrain.png-2429869a2eda9e4e63611cdbdb9d48a8.stex" ]
+dest_md5="eff36325189b9eda19cc586574d229d5"
 
 [params]
 

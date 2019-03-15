@@ -2,12 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/map0_back.jpg-edd2b3b9fcaf7adf639d78f9503f1ef6.stex"
+path="res://.import/map0_back.jpg-d2d7282a8ed84d0a0ff58948a4b701f4.stex"
 
 [deps]
 
-source_file="res://map0_back.jpg"
-dest_files=[ "res://.import/map0_back.jpg-edd2b3b9fcaf7adf639d78f9503f1ef6.stex" ]
+source_file="res://art/stages/basic_stage/map0_back.jpg"
+source_md5="461f12b2323e763ee628bfeecdef44ed"
+
+dest_files=[ "res://.import/map0_back.jpg-d2d7282a8ed84d0a0ff58948a4b701f4.stex" ]
+dest_md5="a37d9e05ff6618be5f480a60d262d950"
 
 [params]
 

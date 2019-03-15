@@ -8,7 +8,7 @@ var players_in_goal = null
 var players_not_in_goal = null
 
 func init(players):
-	var player_list = ResourceLoader.load("res://PlayerLinkedList.gd")
+	var player_list = ResourceLoader.load("res://match/stages/goal/PlayerLinkedList.gd")
 	players_in_goal = player_list.new()
 	players_not_in_goal = player_list.new()
 	for player in players:

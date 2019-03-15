@@ -2,12 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/temp_pig.png-721fd73a7228cda4960404b660c8f84e.stex"
+path="res://.import/temp_pig.png-dbb7127391efee2d1dd3863c7e13da7a.stex"
 
 [deps]
 
-source_file="res://temp_pig.png"
-dest_files=[ "res://.import/temp_pig.png-721fd73a7228cda4960404b660c8f84e.stex" ]
+source_file="res://art/characters/basic_character/temp_pig.png"
+source_md5="c27547e1d8eeec63d787be5fa4622bc5"
+
+dest_files=[ "res://.import/temp_pig.png-dbb7127391efee2d1dd3863c7e13da7a.stex" ]
+dest_md5="bc74a0c80ee9ac0ad2712d05bd651b78"
 
 [params]
 

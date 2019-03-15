@@ -2,12 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/goal1.png-d2a08c3f2e5da348bec7e306dc0f67cc.stex"
+path="res://.import/goal1.png-f9fc36a7a816e5a55b2a4dc741dbcb44.stex"
 
 [deps]
 
-source_file="res://goal1.png"
-dest_files=[ "res://.import/goal1.png-d2a08c3f2e5da348bec7e306dc0f67cc.stex" ]
+source_file="res://art/stages/basic_stage/goal1.png"
+source_md5="4ab6737008797ddb3d0d5c963a69915c"
+
+dest_files=[ "res://.import/goal1.png-f9fc36a7a816e5a55b2a4dc741dbcb44.stex" ]
+dest_md5="45e10f2aa5b2bbba9d6630fc0e192e70"
 
 [params]
 

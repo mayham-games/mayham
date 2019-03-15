@@ -1,14 +1,14 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://BasicPlayer.gd" type="Script" id=1]
-[ext_resource path="res://temp_pig.png" type="Texture" id=2]
+[ext_resource path="res://match/player/BasicPlayer.gd" type="Script" id=1]
+[ext_resource path="res://art/characters/basic_character/temp_pig.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
 radius = 32.0618
 
-[node name="Player" type="KinematicBody2D" index="0"]
+[node name="Player" type="KinematicBody2D"]
 
 position = Vector2( 630, 178 )
 input_pickable = false

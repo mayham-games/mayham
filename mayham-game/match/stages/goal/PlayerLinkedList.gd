@@ -1,4 +1,4 @@
-extends 'res://LinkedList.gd'
+extends 'res://match/stages/goal/LinkedList.gd'
 
 func pop_all():
 	var temp_list = get_script()

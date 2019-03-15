@@ -16,7 +16,7 @@ func init(num):
 
 func _ready():
 	var position_x = 100 * (number - 5)
-	var player = ResourceLoader.load("res://Player.tscn")
+	var player = ResourceLoader.load("res://match/player/Player.tscn")
 	playerDoll = player.instance()
 	add_child(playerDoll)
 	playerDoll.init(number, position_x)

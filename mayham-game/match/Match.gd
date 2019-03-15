@@ -16,10 +16,10 @@ var _map = null
 
 func _ready():
 	# Add the players
-	var game = ResourceLoader.load("res://FlatMap.tscn")
+	var game = ResourceLoader.load("res://match/stages/basic_stage/FlatMap.tscn")
 	_map = game.instance()
 	add_child(_map)
-	var playerController = ResourceLoader.load("res://PlayerController.tscn")
+	var playerController = ResourceLoader.load("res://match/player/PlayerController.tscn")
 	var players = []
 	for i in range(num_players):
 		var playerControl = playerController.instance()
