@@ -328,7 +328,7 @@ func increment_score_by(number):		#|
 func create_fireball():
 	var fireball = FIREBALL_SCENE.instance()
 	get_parent().add_child(fireball)
-	fireball.position = position + Vector2(-50, 0)
+	fireball.position = position + Vector2(50 * sign(last_direction.x), 0)
 
 func restart_timer():
 	timer.set_wait_time(1)
