@@ -2,9 +2,8 @@
 
 [ext_resource path="res://Match.gd" type="Script" id=1]
 
-[node name="Match" type="Node"]
+[node name="Match" type="Node" index="0"]
 
-editor/display_folded = true
 script = ExtResource( 1 )
 
 [node name="UI_Placeholder" type="Node" parent="." index="0"]

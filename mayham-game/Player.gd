@@ -1,5 +1,10 @@
 extends KinematicBody2D
 
+#------------ Ezra Changed ------------------
+const FIREBALL_SCENE = preload("Fireball.tscn")
+var _attackTimer = null
+#------------ Ezra Changed ------------------
+
 const UP_DIR = Vector2(0, -1)
 const LEFT_DIR = Vector2(-1, 0)
 const RIGHT_DIR = Vector2(1, 0)
@@ -59,8 +64,15 @@ func _ready():
 	controller.connect("action_left", self, "_on_player_left")
 	controller.connect("action_right", self, "_on_player_right")
 	controller.connect("action_stop", self, "_on_player_stop")
+	controller.connect("action_attack", self, "_on_player_attack") #----------------- Ezra Insert
 	print(position)
 	#(630, 178)
+	
+	#------------ Ezra Changed ------------------
+	_timer = Timer.new()
+	add_child(_timer)
+	_timer.connect("timeout", self, "_on_Timer_timeout")
+	#------------ Ezra Changed ------------------
 	
 func _is_state(state):
 	return (curr_state & state) == state
@@ -138,6 +150,13 @@ func _on_player_stop():
 		motion.x = 0
 	
 	_exit_state(MOVING_STATE)
+	
+#------------ Ezra Changed ------------------
+func _on_player_attack():
+	if timer.is_stopped():
+		create_fireball()
+		restart_timer()
+#------------ Ezra Changed ------------------
 
 func _physics_process(delta):
 	momentum *= MOMENTUM_DECAY
@@ -224,3 +243,23 @@ func increment_score_by(number):		#|
 	_score += number					#|
 	_update_score_label()				#|
 #-----------------------------------------
+
+#------------ Ezra Changed -----------------
+func create_fireball():
+	var fireball = FIREBALL_SCENE.instance()
+	get_parent().add_child(fireball)
+	fireball.position = position + Vector2(-50, 0)
+
+func restart_timer():
+	timer.set_wait_time(1)
+	timer.start()
+
+func _on_Timer_timeout():
+	print("timer expires")
+	timer.stop()
+	
+func _hit():
+	print("hit")
+	motion.y = JUMP_HEIGHT/8
+	motion.x = JUMP_HEIGHT*3
+#------------ Ezra Changed -----------------
