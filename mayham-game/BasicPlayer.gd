@@ -43,6 +43,11 @@ var cooldown_time = 0
 # Nodes
 onready var score_label = $ScoreLabel
 
+#------------ Ezra Changed ------------------
+const FIREBALL_SCENE = preload("Fireball.tscn")
+var timer = null
+#------------ Ezra Changed ------------------
+
 ## State Spaces **see achitecture documents for explanation on states
 # Constants
 enum INPUT_STATE {
@@ -93,6 +98,12 @@ func _ready():
 	controller.connect("action_stop", self, "_on_player_stop")
 	controller.connect("action_attack", self, "_on_player_attack")
 	print(position)
+	
+	#------------ Ezra Changed ------------------
+	timer = Timer.new()
+	add_child(timer)
+	timer.connect("timeout", self, "_on_Timer_timeout")
+	#------------ Ezra Changed ------------------	
 	
 func init(number, position_x):
 	_number = number
@@ -185,11 +196,15 @@ func _execute_player_right():
 	last_input_direction = RIGHT_DIR
 
 func _execute_player_attack():
-	curr_action_state = ACTION_STATE.attack
+	curr_action_state = ACTION_STATE.attack 
 	cooldown_time += ATTACK_COOLDOWN
 	curr_input_state = INPUT_STATE.cooldown
-	rotate(90 * sign(last_input_direction.x)) # Just here to show the attack is happening, should be removed soon
-	#TODO: Add the hitbox generation stuff here
+
+#------------ Ezra Changed ------------------
+	if timer.is_stopped():
+		create_fireball()
+		restart_timer()
+#------------ Ezra Changed ------------------
 
 func _execute_player_stop():
 	if curr_action_state == ACTION_STATE.move:
@@ -285,4 +300,21 @@ func _update_score_label():
 func increment_score_by(number):
 	_score += number
 	_update_score_label()
+	
+#------------ Ezra Changed -----------------
+func create_fireball():
+	var fireball = FIREBALL_SCENE.instance()
+	get_parent().add_child(fireball)
+	fireball.position = position + Vector2(50 * sign(last_input_direction.x), 0)
+
+func restart_timer():
+	timer.set_wait_time(1)
+	timer.start()
+
+func _on_Timer_timeout():
+	timer.stop()
+	
+func _hit():
+	print("hit")
+#------------ Ezra Changed -----------------
 	
