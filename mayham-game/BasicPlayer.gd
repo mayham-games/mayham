@@ -305,6 +305,7 @@ func increment_score_by(number):
 func create_fireball():
 	var fireball = FIREBALL_SCENE.instance()
 	get_parent().add_child(fireball)
+	fireball.init(last_input_direction.x)
 	fireball.position = position + Vector2(50 * sign(last_input_direction.x), 0)
 
 func restart_timer():
@@ -315,6 +316,6 @@ func _on_Timer_timeout():
 	timer.stop()
 	
 func _hit():
-	print("hit")
+	print("hit") # place hit physics function call here
 #------------ Ezra Changed -----------------
 	
