@@ -22,5 +22,5 @@ func _on_VisibilityNotifier2D_exit_screen():
 
 func on_body_entered( body ):
 	queue_free()
-	if body == KinematicBody:
+	if body.get_name() == "Player":
 		body._hit()
