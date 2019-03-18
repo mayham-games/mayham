@@ -50,6 +50,13 @@ var _number = 0							#|
 
 onready var sprite = $PlayerSprite
 onready var sprite_scale = sprite.scale.x
+#------------ DJ Changed -----------------
+onready var score_label = $ScoreLabel	#|
+										#|
+func init(number, position_x):			#|
+	_number = number					#|
+	self.position.x += position_x		#|
+#-----------------------------------------
 
 #---------------- Jordan -----------------
 var hit_stun = 0
