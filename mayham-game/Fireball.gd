@@ -23,4 +23,4 @@ func _on_VisibilityNotifier2D_exit_screen():
 func on_body_entered( body ):
 	queue_free()
 	if body.get_name() == "Player":
-		body._hit()
+		body.position_hit(100, position)
