@@ -64,7 +64,3 @@ func collect_players():
 func has_winner(winning_score):
 	return players_in_goal.has_winner(winning_score) or players_not_in_goal.has_winner(winning_score)
 
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass
