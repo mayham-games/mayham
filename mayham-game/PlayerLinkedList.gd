@@ -1,14 +1,14 @@
 extends 'res://LinkedList.gd'
 
 func pop_all():
-	var temp_list = get_script()
+	var temp_array = []
 	while _len > 0:
-		temp_list.push_back(pop_front())
-	return temp_list
+		temp_array.push_back(pop_front())
+	return temp_array
 
-func push_all(list):
-	while list.size() > 0:
-		push_back(list.pop_front())
+func push_all(array):
+	while array.size() > 0:
+		push_back(array.pop_front())
 
 func pop(node):
 	if _head == node:
@@ -47,7 +47,7 @@ func has_winner(winning_score):
 	return false
 
 func pop_all_ordered_by_highest_score(): #clears list as well
-	var ordered = get_script()
+	var ordered = []
 	while _len > 0:
 		var temp = _head
 		var leader = temp
