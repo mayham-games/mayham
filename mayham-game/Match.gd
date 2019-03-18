@@ -7,7 +7,8 @@ var time_remaining = 0
 # onready vars
 # game rules
 onready var num_players = 2
-onready var time_limit = 180 # 3 min
+# onready var time_limit = 180 # 3 min
+onready var time_limit = 5 # 5 seconds, temporary
 onready var winning_score = 50
 onready var goal_interval = 20
 
@@ -35,7 +36,7 @@ func _process(delta):
 	# Called every frame. Delta is time since last frame.
 	# Update game logic here.
 	if _map.has_winner(winning_score) or time_remaining <= 0:
-		end_game()
+		_end_game()
 
 func _init_players():
 	var playerController = ResourceLoader.load("res://PlayerController.tscn")
