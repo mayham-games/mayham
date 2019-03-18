@@ -100,7 +100,7 @@ func _ready():
 	controller.connect("action_left", self, "_on_player_left")
 	controller.connect("action_right", self, "_on_player_right")
 	controller.connect("action_stop", self, "_on_player_stop")
-	controller.connect("action_attack", self, "_hit_test")
+	controller.connect("action_attack", self, "_on_player_attack")
 	#---------------- Jordan -----------------
 	$PlayerSprite.hide()
 	anim.show()
