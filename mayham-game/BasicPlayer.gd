@@ -31,6 +31,7 @@ const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will b
 const STUN_COOLDOWN = 0.35 # number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
+const HIT_COOL_DOWN = 0.05	# Jordan: constant for secs until input from controller will be accepted after getting hit
 # Variables
 var wall_jump_cnt = 0
 var wall_jump_dir = NO_DIR
@@ -40,6 +41,13 @@ var last_input_direction = Vector2(0, 0)
 var _score = 0
 var _number = 0
 var cooldown_time = 0
+#---------------- Jordan -----------------
+var hit_stun = 0				# timer for secs until input from controller will be accepted after getting hit
+var hit_momentum = Vector2()	# knock back applied after getting hit
+var hit_slow = Vector2()		# decay factor for hit_momentum
+onready var anim = $PlayerAnim	# animation of player sprite
+onready var anim_scale = anim.scale.x
+#------------ end Jordan -----------------
 # Nodes
 onready var score_label = $ScoreLabel
 
@@ -66,6 +74,7 @@ enum ACTION_STATE {
 	attack,
 	dash,
 	wall_jump
+	knock_back		# added by Jordan
 }
 
 # Variables
@@ -98,7 +107,11 @@ func _ready():
 	controller.connect("action_stop", self, "_on_player_stop")
 	controller.connect("action_attack", self, "_on_player_attack")
 	print(position)
-	
+	#---------------- Jordan -----------------
+	anim.show()
+	score_label.add_color_override("font_color",Color(1,1,1,1))
+	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
+	#------------ end Jordan -----------------
 	#------------ Ezra Changed ------------------
 	timer = Timer.new()
 	add_child(timer)
@@ -144,6 +157,8 @@ func _print_debug():
 			print("attack")
 		ACTION_STATE.dash:
 			print("\tdash")
+		ACTION_STATE.knock_back:
+			print("\tknock_back")
 	
 	
 func _on_player_dash():
@@ -186,13 +201,21 @@ func _execute_player_jump():
 func _execute_player_left():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		
+		#---------------- Jordan -----------------
+		anim.scale.x = -anim_scale
+		if not anim.is_playing():
+			anim.play()
+		#------------ end Jordan -----------------
 	last_input_direction = LEFT_DIR
 
 func _execute_player_right():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		
+		#---------------- Jordan -----------------
+		anim.scale.x = anim_scale
+		if not anim.is_playing():
+			anim.play()
+		#------------ end Jordan -----------------
 	last_input_direction = RIGHT_DIR
 
 func _execute_player_attack():
@@ -209,6 +232,7 @@ func _execute_player_attack():
 func _execute_player_stop():
 	if curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.idle
+		anim.stop()			#Jordan
 
 func _update_world_state():
 	if curr_world_state == WORLD_STATE.grounded and !is_on_floor():
@@ -232,10 +256,12 @@ func _physics_process(delta):
 	# update control state
 	if curr_input_state == INPUT_STATE.hit or curr_input_state == INPUT_STATE.cooldown:
 		cooldown_time = max(cooldown_time - delta, 0)
-		if cooldown_time <= 0:
+		hit_stun = max(hit_stun - delta, 0)		# Jordan: hit_stun is a seperate timer
+		if cooldown_time <= 0 and hit_stun <= 0:		# Jordan: hit_stun needs to be at 0 before control is restored:
 			curr_input_state = INPUT_STATE.control
 			curr_action_state = ACTION_STATE.idle
-			
+			hit_momentum = Vector2()					# Jordan:
+
 	# update world state
 	_update_world_state()
 	
@@ -279,6 +305,11 @@ func _physics_process(delta):
 		curr_velocity.x = sign(curr_velocity.x) * min(abs(curr_velocity.x), GROUND_SPEED)
 	elif curr_action_state == ACTION_STATE.idle:
 		curr_velocity.x = NO_DIR.x
+	# Jordan: apply knock_back
+	elif curr_action_state == ACTION_STATE.knock_back:
+		curr_velocity = hit_momentum
+		hit_momentum.x -= hit_slow.x*delta
+		hit_momentum.y -= hit_slow.y*delta
 	
 	if curr_world_state != WORLD_STATE.grounded and curr_action_state != ACTION_STATE.dash:
 		curr_velocity.y = min(TERMINAL_GRAVITY_VELOCITY, curr_velocity.y + GRAVITY_ACCEL)
@@ -300,7 +331,36 @@ func _update_score_label():
 func increment_score_by(number):
 	_score += number
 	_update_score_label()
+
+#---------------- Jordan -----------------
+func vector_hit(power, vector):
+	if curr_world_state == WORLD_STATE.grounded:
+		vector.y = abs(vector.y)*-1 - 1.0
+	#print(vector)
+	vector = vector.normalized()
+	hit_stun = HIT_COOL_DOWN*(power/10)
+	curr_input_state = INPUT_STATE.hit
+	curr_action_state = ACTION_STATE.knock_back
+	anim.stop()
+	hit_momentum = vector*10*(power)
+	hit_slow = hit_momentum*(10/(HIT_COOL_DOWN*power))
+	hit_momentum += curr_velocity
+	#curr_velocity.y = hit_momentum.y
+
+func position_hit(power, pos):
+	var vector = Vector2(position - pos).normalized()
+	vector_hit(power, vector)
+
+func _hit_test():
+	# vector hit test
+	#var vec = Vector2(rand_range(-1,1),rand_range(-1,0))
+	#vector_hit(100, vec)
 	
+	# position hit test
+	var vec = position + Vector2(100,100)
+	position_hit(100, vec)
+#------------ end Jordan -----------------
+
 #------------ Ezra Changed -----------------
 func create_fireball():
 	var fireball = FIREBALL_SCENE.instance()
