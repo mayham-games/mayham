@@ -2,18 +2,20 @@ extends Node
 
 var goal = null
 onready var goal_positions = [ $GoalPosition1, $GoalPosition2, $GoalPosition3, $GoalPosition4 ]
-
+onready var timelabel = $MatchTime
 
 func init(players):
 	goal = $Goal
 	goal.init(players)
 
 func _ready():
-	pass
+	timelabel.add_color_override("font_color",Color(0,0,0,1))
+	timelabel.add_color_override("font_color_shadow",Color(1,1,1,1))
 
 func move_goal():
 	var index = randi() % goal_positions.size()
 	goal.position = goal_positions[index].position
+
 
 func award_points():
 	goal.award_points()

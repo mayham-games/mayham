@@ -28,6 +28,9 @@ func _ready():
 		players.append(playerControl.get_player())
 	_map.init(players)
 	
+	# set the time limit
+	time_remaining = time_limit
+	
 	_timer = Timer.new()
 	add_child(_timer)
 	_timer.connect("timeout", self, "_on_Timer_timeout")

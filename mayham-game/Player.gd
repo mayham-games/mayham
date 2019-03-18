@@ -18,6 +18,7 @@ const DASH_SPEED = 800
 #Cooldowns
 const WALL_JUMP_COOL_DOWN = 0.35
 const DASH_COOL_DOWN = 0.25
+const HIT_COOL_DOWN = 0.1	# Jordan
 
 #States
 const NO_STATE = 0
@@ -25,6 +26,7 @@ const GROUNDED_STATE = 1
 const DASH_STATE = 2
 const MOVING_STATE = 4
 const COOL_STATE = 8
+const HIT_STATE = 16		# Jordan
 
 var motion = Vector2()
 var wall_jump_cnt = 0
@@ -51,14 +53,37 @@ func init(number, position_x):			#|
 	self.position.x += position_x		#|
 #-----------------------------------------
 
+#---------------- Jordan -----------------
+var hit_stun = 0
+var hit_momentum = Vector2()
+var hit_slow = Vector2()
+onready var anim = $PlayerAnim
+onready var anim_scale = anim.scale.x
+#------------ end Jordan -----------------
+
+#------------ DJ Changed -----------------
+onready var score_label = $ScoreLabel	#|
+										#|
+func init(number, position_x):			#|
+	_number = number					#|
+	self.position.x += position_x		#|
+#-----------------------------------------
+
 func _ready():
 	controller = get_parent()
 	controller.connect("action_start", self, "_on_player_start")
-	controller.connect("action_dash", self, "_on_player_dash")
+	controller.connect("action_dash", self, "_on_player_dash")		# comment this line out and
+	#controller.connect("action_dash", self, "_hit_test")			# this line in to test getting hit
 	controller.connect("action_jump", self, "_on_player_jump")
 	controller.connect("action_left", self, "_on_player_left")
 	controller.connect("action_right", self, "_on_player_right")
 	controller.connect("action_stop", self, "_on_player_stop")
+	#---------------- Jordan -----------------
+	sprite.hide()
+	anim.show()
+	score_label.add_color_override("font_color",Color(1,1,1,1))
+	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
+	#------------ end Jordan -----------------
 	print(position)
 	#(630, 178)
 	
@@ -116,6 +141,7 @@ func _on_player_jump():
 		_exit_state(COOL_STATE)
 		_exit_state(DASH_STATE)
 		_exit_state(MOVING_STATE)
+		anim.stop()		# ------------- Jordan
 		momentum.x = motion.x
 	
 func _on_player_left():
@@ -123,20 +149,30 @@ func _on_player_left():
 		motion.x = -SPEED
 		last_direction = LEFT_DIR
 		sprite.scale.x = -sprite_scale
+		#---------------- Jordan -----------------
+		anim.scale.x = -anim_scale
+		if not anim.is_playing():
+			anim.play()
 		_enter_state(MOVING_STATE)
+		#------------ end Jordan -----------------
 
 func _on_player_right():
 	if _is_state(COOL_STATE) and !_is_state(DASH_STATE):
 		motion.x = SPEED
 		last_direction = RIGHT_DIR
 		sprite.scale.x = sprite_scale
+		#---------------- Jordan -----------------
+		anim.scale.x = anim_scale
+		if not anim.is_playing():
+			anim.play()
 		_enter_state(MOVING_STATE)
+		#------------ end Jordan -----------------
 
 
 func _on_player_stop():
 	if !_is_state(DASH_STATE):
 		motion.x = 0
-	
+		anim.stop()		# ------------- Jordan
 	_exit_state(MOVING_STATE)
 
 func _physics_process(delta):
@@ -154,8 +190,11 @@ func _physics_process(delta):
 	if _is_not_state(COOL_STATE):
 		input_cool_down = max(0.0, input_cool_down - delta)
 	
-	if input_cool_down <= 0.0:
+	if input_cool_down <= 0.0 and _is_not_state(HIT_STATE):			# tweaked by Jordan
 		_enter_state(COOL_STATE)
+	
+	if _is_state(COOL_STATE):
+		momentum = Vector2()
 	
 	if _is_state(COOL_STATE) and _is_state(DASH_STATE):
 		_exit_state(DASH_STATE)
@@ -163,14 +202,14 @@ func _physics_process(delta):
 	
 	if _is_state(DASH_STATE):
 		motion = last_direction * DASH_SPEED
-	elif _is_not_state(MOVING_STATE):
+	elif _is_not_state(MOVING_STATE) and _is_not_state(HIT_STATE):	# tweaked by Jordan
 		motion.x = 0
 	
 	if _is_state(GROUNDED_STATE):
 		if _is_not_state(DASH_STATE):
 			input_cool_down = 0.0
 			dash_cnt = 0
-			_enter_state(COOL_STATE)
+			#_enter_state(COOL_STATE)
 		if wall_jump_cnt > 0:
 			wall_jump_cnt = 0
 			wall_jump_decay = 1.0
@@ -178,6 +217,25 @@ func _physics_process(delta):
 		motion.y = min(TERMINAL_GRAVITY, motion.y + GRAVITY)
 	
 	motion += momentum
+	
+	#---------------- Jordan -----------------
+	motion.x += hit_momentum.x
+	
+	if _is_state(HIT_STATE):
+			hit_stun = max(0.0, hit_stun - delta)
+	
+	if hit_stun <= 0.0:
+		_exit_state(HIT_STATE)
+		hit_momentum = Vector2()
+	
+	if _is_state(HIT_STATE):
+		print(hit_momentum)
+		hit_momentum.x -= hit_slow.x*delta
+		if hit_momentum.y != 0:
+			hit_momentum.y -= hit_slow.y*delta
+	
+	#motion.y -= hit_momentum.y
+	#------------ end Jordan -----------------
 	
 	if _is_not_state(DASH_STATE):
 		if _is_state(COOL_STATE):
@@ -191,8 +249,6 @@ func _physics_process(delta):
 		_enter_state(GROUNDED_STATE)
 	elif !is_on_floor() and _is_state(GROUNDED_STATE):
 		_exit_state(GROUNDED_STATE)
-	
-	
 	
 	if is_on_wall() and _is_state(DASH_STATE):
 		input_cool_down = 0.0
@@ -208,7 +264,38 @@ func _physics_process(delta):
 	
 	
 	
-	#rotate(angle)
+#rotate(angle)
+
+#---------------- Jordan -----------------
+func vector_hit(power, vector):
+	vector = vector.normalized()
+	hit_stun = HIT_COOL_DOWN*(power/100)
+	_enter_state(HIT_STATE)
+	_exit_state(COOL_STATE)
+	anim.stop()
+	hit_momentum = vector*(2*power^2)
+	hit_slow = hit_momentum*(100/(HIT_COOL_DOWN*power))
+	motion.y = hit_momentum.y
+
+func position_hit(power, pos):
+	var vector = Vector2(position - pos).normalized()
+	hit_stun = HIT_COOL_DOWN*(power/100)
+	_enter_state(HIT_STATE)
+	_exit_state(COOL_STATE)
+	anim.stop()
+	hit_momentum = vector*(2*power^2)
+	hit_slow = hit_momentum*(100/(HIT_COOL_DOWN*power))
+	motion.y = hit_momentum.y
+
+func _hit_test():
+	# vector hit test
+	var vec = Vector2(rand_range(-1,1),rand_range(-1,0))
+	vector_hit(200, vec)
+	
+	# position hit test
+	#var vec = position + Vector2(100,100)
+	#position_hit(500, vec)
+#------------ end Jordan -----------------
 
 #------------ DJ Changed -----------------
 func get_number():						#|
