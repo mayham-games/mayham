@@ -7,11 +7,13 @@ signal action_right
 signal action_dash
 signal action_stop
 signal action_attack
+signal action_special
 
 # Input Controls
 # Constants
 const ACTION_JUMP = "jump"
 const ACTION_ATTACK = "attack"
+const ACTION_SPECIAL = "special"
 const ACTION_DASH = "dash"
 const ACTION_LEFT = "left"
 const ACTION_RIGHT = "right"
@@ -32,11 +34,15 @@ const DEFAULT_CONTROLS = {
 	},
 	ACTION_ATTACK : { 
 		INPUT_TYPE : INPUT_BUTTON,
-		BUTTON_INDEX : JOY_XBOX_Y
+		BUTTON_INDEX : JOY_XBOX_B
 	},
 	ACTION_DASH : { 
 		INPUT_TYPE : INPUT_BUTTON,
-		BUTTON_INDEX : JOY_XBOX_B
+		BUTTON_INDEX : JOY_XBOX_X
+	},
+	ACTION_SPECIAL : { 
+		INPUT_TYPE : INPUT_BUTTON,
+		BUTTON_INDEX : JOY_XBOX_Y
 	},
 	ACTION_LEFT : { 
 		INPUT_TYPE : INPUT_MOTION,
@@ -115,6 +121,8 @@ func _input(event):
 		emit_signal("action_stop")
 	if event.is_action_pressed("p" + str(number) + "_attack"):
 		emit_signal("action_attack")
+	if event.is_action_pressed("p" + str(number) + "_special"):
+		emit_signal("action_special")
 
 func _process(delta):
 	if Input.is_action_pressed("p" + str(number) + "_left"):
