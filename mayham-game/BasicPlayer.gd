@@ -321,7 +321,7 @@ func vector_hit(power, vector):
 	curr_action_state = ACTION_STATE.knock_back
 	anim.stop()
 	hit_momentum = vector*10*(power)
-	hit_slow = hit_momentum*(10/(HIT_COOL_DOWN*power))
+	hit_slow = hit_momentum*(10/(STUN_COOLDOWN*power))
 	hit_momentum += curr_velocity
 	#curr_velocity.y = hit_momentum.y
 
