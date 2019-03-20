@@ -28,7 +28,7 @@ const MAX_DASH_CNT = 2 # Max number of times a player can dash before needing to
 const MAX_JUMP_CNT = 2 # Max number of times a player can jump until needing to touch the ground
 const ATTACK_POWER = 350 # Strength of a players attack
 const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after attacking
-const STUN_COOLDOWN = 0.35 # number of secs until input from controller will be accepted after getting hit
+const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
 const HIT_COOL_DOWN = 0.05	# Jordan: constant for secs until input from controller will be accepted after getting hit
@@ -41,13 +41,12 @@ var last_input_direction = Vector2(0, 0)
 var _score = 0
 var _number = 0
 var cooldown_time = 0
-#---------------- Jordan -----------------
-var hit_stun = 0				# timer for secs until input from controller will be accepted after getting hit
-var hit_momentum = Vector2()	# knock back applied after getting hit
+var stun_cooldown = 0		# timer for secs until input from controller will be accepted after getting hit
+var hit_momentum = Vector2()		# knock back applied after getting hit
 var hit_slow = Vector2()		# decay factor for hit_momentum
-onready var anim = $PlayerAnim	# animation of player sprite
+
+onready var anim = $PlayerAnim		# animation of player sprite
 onready var anim_scale = anim.scale.x
-#------------ end Jordan -----------------
 # Nodes
 onready var score_label = $ScoreLabel
 
@@ -74,7 +73,7 @@ enum ACTION_STATE {
 	attack,
 	dash,
 	wall_jump
-	knock_back		# added by Jordan
+	knock_back
 }
 
 # Variables
@@ -106,6 +105,11 @@ func _ready():
 	controller.connect("action_right", self, "_on_player_right")
 	controller.connect("action_stop", self, "_on_player_stop")
 	controller.connect("action_attack", self, "_on_player_attack")
+
+	anim.show()
+	score_label.add_color_override("font_color",Color(1,1,1,1))
+	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
+
 	print(position)
 	#---------------- Jordan -----------------
 	anim.show()
@@ -116,16 +120,16 @@ func _ready():
 	timer = Timer.new()
 	add_child(timer)
 	timer.connect("timeout", self, "_on_Timer_timeout")
-	#------------ Ezra Changed ------------------	
-	
+	#------------ Ezra Changed ------------------
+
 func init(number, position_x):
 	_number = number
 	self.position.x += position_x
-	
+
 func _on_player_start():
 	print("START")
 	_print_debug()
-	
+
 func _print_debug():
 	print("Input state:")
 	match curr_input_state:
@@ -135,7 +139,7 @@ func _print_debug():
 			print("\tcooldown ", cooldown_time)
 		INPUT_STATE.hit:
 			print("\thit")
-	
+
 	print("World state:")
 	match curr_world_state:
 		WORLD_STATE.grounded:
@@ -144,7 +148,7 @@ func _print_debug():
 			print("\tairborne")
 		WORLD_STATE.air_walled:
 			print("\tair_walled")
-	
+
 	print("Action state:")
 	match curr_action_state:
 		ACTION_STATE.idle:
@@ -159,8 +163,8 @@ func _print_debug():
 			print("\tdash")
 		ACTION_STATE.knock_back:
 			print("\tknock_back")
-	
-	
+
+
 func _on_player_dash():
 	input_queue.append(ACTIONS.dash)
 
@@ -201,25 +205,23 @@ func _execute_player_jump():
 func _execute_player_left():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		#---------------- Jordan -----------------
 		anim.scale.x = -anim_scale
 		if not anim.is_playing():
 			anim.play()
-		#------------ end Jordan -----------------
+
 	last_input_direction = LEFT_DIR
 
 func _execute_player_right():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		#---------------- Jordan -----------------
 		anim.scale.x = anim_scale
 		if not anim.is_playing():
 			anim.play()
-		#------------ end Jordan -----------------
+
 	last_input_direction = RIGHT_DIR
 
 func _execute_player_attack():
-	curr_action_state = ACTION_STATE.attack 
+	curr_action_state = ACTION_STATE.attack
 	cooldown_time += ATTACK_COOLDOWN
 	curr_input_state = INPUT_STATE.cooldown
 
@@ -256,15 +258,15 @@ func _physics_process(delta):
 	# update control state
 	if curr_input_state == INPUT_STATE.hit or curr_input_state == INPUT_STATE.cooldown:
 		cooldown_time = max(cooldown_time - delta, 0)
-		hit_stun = max(hit_stun - delta, 0)		# Jordan: hit_stun is a seperate timer
-		if cooldown_time <= 0 and hit_stun <= 0:		# Jordan: hit_stun needs to be at 0 before control is restored:
+		stun_cooldown = max(stun_cooldown - delta, 0)
+		if cooldown_time <= 0 and stun_cooldown <= 0:
 			curr_input_state = INPUT_STATE.control
 			curr_action_state = ACTION_STATE.idle
-			hit_momentum = Vector2()					# Jordan:
+			hit_momentum = Vector2()
 
 	# update world state
 	_update_world_state()
-	
+
 	# update control state
 	if curr_input_state == INPUT_STATE.control:
 		var action = -1
@@ -301,16 +303,16 @@ func _physics_process(delta):
 			curr_velocity.x = last_input_direction.x * GROUND_SPEED
 		else:
 			curr_velocity.x += last_input_direction.x * GROUND_SPEED
-		
+
 		curr_velocity.x = sign(curr_velocity.x) * min(abs(curr_velocity.x), GROUND_SPEED)
 	elif curr_action_state == ACTION_STATE.idle:
 		curr_velocity.x = NO_DIR.x
-	# Jordan: apply knock_back
+		anim.stop()
 	elif curr_action_state == ACTION_STATE.knock_back:
 		curr_velocity = hit_momentum
 		hit_momentum.x -= hit_slow.x*delta
 		hit_momentum.y -= hit_slow.y*delta
-	
+
 	if curr_world_state != WORLD_STATE.grounded and curr_action_state != ACTION_STATE.dash:
 		curr_velocity.y = min(TERMINAL_GRAVITY_VELOCITY, curr_velocity.y + GRAVITY_ACCEL)
 
@@ -321,24 +323,23 @@ func _physics_process(delta):
 
 func get_number():
 	return _number
-				
+
 func get_score():
 	return _score
-				
+
 func _update_score_label():
 	score_label.text = str(_score)
-				
+
 func increment_score_by(number):
 	_score += number
 	_update_score_label()
 
-#---------------- Jordan -----------------
 func vector_hit(power, vector):
 	if curr_world_state == WORLD_STATE.grounded:
 		vector.y = abs(vector.y)*-1 - 1.0
 	#print(vector)
 	vector = vector.normalized()
-	hit_stun = HIT_COOL_DOWN*(power/10)
+	stun_cooldown = STUN_COOLDOWN*(power/10)
 	curr_input_state = INPUT_STATE.hit
 	curr_action_state = ACTION_STATE.knock_back
 	anim.stop()
@@ -355,7 +356,7 @@ func _hit_test():
 	# vector hit test
 	#var vec = Vector2(rand_range(-1,1),rand_range(-1,0))
 	#vector_hit(100, vec)
-	
+
 	# position hit test
 	var vec = position + Vector2(100,100)
 	position_hit(100, vec)
@@ -374,8 +375,7 @@ func restart_timer():
 
 func _on_Timer_timeout():
 	timer.stop()
-	
+
 func _hit():
 	print("hit") # place hit physics function call here
 #------------ Ezra Changed -----------------
-	
