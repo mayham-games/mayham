@@ -51,9 +51,6 @@ func _on_Goal_moved():
 		if player.is_class("KinematicBody2D"):
 			players_in_goal.push(players_not_in_goal.pop_by_number(player.get_number()))
 
-func move_to_position(position):
-	pass
-
 func award_points():
 	players_in_goal.add_point_to_all()
 
