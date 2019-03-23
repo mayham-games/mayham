@@ -59,7 +59,8 @@ enum INPUT_STATE {
 enum WORLD_STATE {
 	grounded,
 	airborne,
-	air_walled
+	air_walled,
+	air_capped
 }
 enum ACTION_STATE {
 	idle,
@@ -122,7 +123,7 @@ func _print_debug():
 		INPUT_STATE.cooldown:
 			print("\tcooldown ", cooldown_time)
 		INPUT_STATE.hit:
-			print("\thit")
+			print("\thit ", stun_cooldown, " ", hit_momentum)
 	
 	print("World state:")
 	match curr_world_state:
@@ -132,6 +133,8 @@ func _print_debug():
 			print("\tairborne")
 		WORLD_STATE.air_walled:
 			print("\tair_walled")
+		WORLD_STATE.air_capped:
+			print("\tair_capped")
 	
 	print("Action state:")
 	match curr_action_state:
@@ -145,6 +148,8 @@ func _print_debug():
 			print("attack")
 		ACTION_STATE.dash:
 			print("\tdash")
+		ACTION_STATE.knock_back:
+			print("\tknock_back")
 	
 	
 func _on_player_dash():
@@ -215,14 +220,18 @@ func _execute_player_stop():
 
 func _update_world_state():
 	if curr_world_state == WORLD_STATE.grounded and !is_on_floor():
-		if is_on_wall():
+		if is_on_ceiling():
+			curr_world_state = WORLD_STATE.air_capped
+		elif is_on_wall():
 			curr_world_state = WORLD_STATE.air_walled
 		else:
 			curr_world_state = WORLD_STATE.airborne
 	elif !is_on_floor():
-		if curr_world_state == WORLD_STATE.airborne and is_on_wall():
+		if curr_world_state != WORLD_STATE.air_capped and is_on_ceiling():
+			curr_world_state = WORLD_STATE.air_capped
+		elif curr_world_state != WORLD_STATE.air_walled and is_on_wall() and !is_on_ceiling():
 			curr_world_state = WORLD_STATE.air_walled
-		elif curr_world_state == WORLD_STATE.air_walled and !is_on_wall():
+		elif curr_world_state != WORLD_STATE.airborne and !is_on_ceiling() and !is_on_wall():
 			curr_world_state = WORLD_STATE.airborne
 	elif curr_world_state != WORLD_STATE.grounded and is_on_floor():
 		curr_world_state = WORLD_STATE.grounded
@@ -289,6 +298,13 @@ func _physics_process(delta):
 		curr_velocity = hit_momentum
 		hit_momentum.x -= hit_slow.x*delta
 		hit_momentum.y -= hit_slow.y*delta
+		
+		if curr_world_state == WORLD_STATE.air_walled:
+			curr_velocity.x *= -1
+			hit_momentum.x *= -1
+		if  curr_world_state == WORLD_STATE.air_capped or curr_world_state == WORLD_STATE.grounded:
+			curr_velocity.y *= -1
+			hit_momentum.y *= -1
 	
 	if curr_world_state != WORLD_STATE.grounded and curr_action_state != ACTION_STATE.dash:
 		curr_velocity.y = min(TERMINAL_GRAVITY_VELOCITY, curr_velocity.y + GRAVITY_ACCEL)
