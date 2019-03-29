@@ -31,29 +31,27 @@ const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will b
 const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
-const HIT_COOL_DOWN = 0.05	# Jordan: constant for secs until input from controller will be accepted after getting hit
+const FIREBALL_SCENE = preload("Fireball.tscn")
+const FIREBALL_SPEED = 300
+const FIREBALL_POWER = 100
 # Variables
 var wall_jump_cnt = 0
 var wall_jump_dir = NO_DIR
 var jump_cnt = 1
 var dash_cnt = 0
-var last_input_direction = Vector2(0, 0)
+var last_input_direction = RIGHT_DIR
 var _score = 0
 var _number = 0
 var cooldown_time = 0
 var stun_cooldown = 0		# timer for secs until input from controller will be accepted after getting hit
 var hit_momentum = Vector2()		# knock back applied after getting hit
+var special_cooldown_timer = 0 
 var hit_slow = Vector2()		# decay factor for hit_momentum
 
 onready var anim = $PlayerAnim		# animation of player sprite
 onready var anim_scale = anim.scale.x
 # Nodes
 onready var score_label = $ScoreLabel
-
-#------------ Ezra Changed ------------------
-const FIREBALL_SCENE = preload("Fireball.tscn")
-var timer = null
-#------------ Ezra Changed ------------------
 
 ## State Spaces **see achitecture documents for explanation on states
 # Constants
@@ -89,7 +87,8 @@ enum ACTIONS {
 	stop,
 	jump,
 	dash,
-	attack
+	attack,
+	special
 }
 # Variables
 var controller
@@ -105,22 +104,16 @@ func _ready():
 	controller.connect("action_right", self, "_on_player_right")
 	controller.connect("action_stop", self, "_on_player_stop")
 	controller.connect("action_attack", self, "_on_player_attack")
+	controller.connect("action_special", self, "_on_player_special")
 
 	anim.show()
 	score_label.add_color_override("font_color",Color(1,1,1,1))
 	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
 
 	print(position)
-	#---------------- Jordan -----------------
 	anim.show()
 	score_label.add_color_override("font_color",Color(1,1,1,1))
 	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
-	#------------ end Jordan -----------------
-	#------------ Ezra Changed ------------------
-	timer = Timer.new()
-	add_child(timer)
-	timer.connect("timeout", self, "_on_Timer_timeout")
-	#------------ Ezra Changed ------------------
 
 func init(number, position_x):
 	_number = number
@@ -179,6 +172,9 @@ func _on_player_right():
 
 func _on_player_attack():
 	input_queue.append(ACTIONS.attack)
+	
+func _on_player_special():
+	input_queue.append(ACTIONS.special)
 
 func _on_player_stop():
 	input_queue.append(ACTIONS.stop)
@@ -224,12 +220,16 @@ func _execute_player_attack():
 	curr_action_state = ACTION_STATE.attack
 	cooldown_time += ATTACK_COOLDOWN
 	curr_input_state = INPUT_STATE.cooldown
-
-#------------ Ezra Changed ------------------
-	if timer.is_stopped():
+	
+func _execute_player_special():
+	if special_cooldown_timer == 0:
 		create_fireball()
-		restart_timer()
-#------------ Ezra Changed ------------------
+		
+		curr_action_state = ACTION_STATE.attack
+		cooldown_time += ATTACK_COOLDOWN
+		curr_input_state = INPUT_STATE.cooldown
+
+
 
 func _execute_player_stop():
 	if curr_action_state == ACTION_STATE.move:
@@ -286,6 +286,8 @@ func _physics_process(delta):
 					_execute_player_dash()
 				ACTIONS.attack:
 					_execute_player_attack()
+				ACTIONS.special:
+					_execute_player_special()
 	else:
 		# Remove all actions when not able to control
 		# not doing this allows for action buffering which create some cool movement options
@@ -360,22 +362,10 @@ func _hit_test():
 	# position hit test
 	var vec = position + Vector2(100,100)
 	position_hit(100, vec)
-#------------ end Jordan -----------------
 
-#------------ Ezra Changed -----------------
 func create_fireball():
 	var fireball = FIREBALL_SCENE.instance()
-	get_parent().add_child(fireball)
-	fireball.init(last_input_direction.x)
+	get_parent().get_parent().add_child(fireball)
+	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER)
 	fireball.position = position + Vector2(50 * sign(last_input_direction.x), 0)
 
-func restart_timer():
-	timer.set_wait_time(1)
-	timer.start()
-
-func _on_Timer_timeout():
-	timer.stop()
-
-func _hit():
-	print("hit") # place hit physics function call here
-#------------ Ezra Changed -----------------
