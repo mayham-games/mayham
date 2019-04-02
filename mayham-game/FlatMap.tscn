@@ -27,7 +27,7 @@ use_filter = false
 font_data = ExtResource( 7 )
 _sections_unfolded = [ "Font", "Settings" ]
 
-[node name="FlatMap" type="Node" index="0"]
+[node name="FlatMap" type="Node"]
 
 script = ExtResource( 1 )
 
@@ -127,9 +127,10 @@ anchor_left = 0.5
 anchor_top = 0.0
 anchor_right = 0.5
 anchor_bottom = 0.0
-margin_left = -51.5
-margin_right = 51.5
-margin_bottom = 99.0
+margin_left = -699.0
+margin_top = -50.0
+margin_right = -596.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2

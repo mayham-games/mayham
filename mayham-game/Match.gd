@@ -10,13 +10,15 @@ onready var _goal_max = 20
 onready var _goal_min = 4
 onready var goal_interval = _goal_max - _goal_min
 onready var goal_move_time = goal_interval
+onready var field = ResourceLoader.load("res://FlatMap.tscn")
+onready var fantasy = ResourceLoader.load("res://Mortal Engines.tscn")
 
 var _timer = null
 var _map = null
 
 func _ready():
 	# Add the players
-	var game = ResourceLoader.load("res://FlatMap.tscn")
+	var game = fantasy
 	_map = game.instance()
 	add_child(_map)
 	var playerController = ResourceLoader.load("res://PlayerController.tscn")

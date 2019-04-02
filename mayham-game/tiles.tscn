@@ -8,7 +8,7 @@ custom_solver_bias = 0.0
 extents = Vector2( 243.472, 248.584 )
 _sections_unfolded = [ "Resource" ]
 
-[node name="Node2D" type="Node2D" index="0"]
+[node name="Node2D" type="Node2D"]
 
 position = Vector2( 31, 28 )
 _sections_unfolded = [ "Transform" ]
