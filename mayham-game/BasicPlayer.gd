@@ -31,9 +31,11 @@ const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will b
 const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
+const SPECIAL_COOLDOWN = 1.0 # number of secs until the player can use its special can be used again
 const FIREBALL_SCENE = preload("Fireball.tscn")
-const FIREBALL_SPEED = 300
+const FIREBALL_SPEED = 400
 const FIREBALL_POWER = 100
+const FIREBALL_SCALE = 2
 # Variables
 var wall_jump_cnt = 0
 var wall_jump_dir = NO_DIR
@@ -52,6 +54,7 @@ onready var anim = $PlayerAnim		# animation of player sprite
 onready var anim_scale = anim.scale.x
 # Nodes
 onready var score_label = $ScoreLabel
+onready var special_meter = $SpecialMeter
 
 ## State Spaces **see achitecture documents for explanation on states
 # Constants
@@ -114,6 +117,12 @@ func _ready():
 	anim.show()
 	score_label.add_color_override("font_color",Color(1,1,1,1))
 	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
+	
+	# Start the game without a special avaliable
+	special_cooldown_timer = SPECIAL_COOLDOWN
+	special_meter.visible = true
+	special_meter.value = (1 - special_cooldown_timer / SPECIAL_COOLDOWN) * special_meter.max_value
+	special_meter.update()
 
 func init(number, position_x):
 	_number = number
@@ -228,6 +237,10 @@ func _execute_player_special():
 		curr_action_state = ACTION_STATE.attack
 		cooldown_time += ATTACK_COOLDOWN
 		curr_input_state = INPUT_STATE.cooldown
+		
+		special_cooldown_timer = SPECIAL_COOLDOWN
+		special_meter.visible = true
+		special_meter.value = (1 - special_cooldown_timer / SPECIAL_COOLDOWN) * special_meter.max_value
 
 
 
@@ -263,6 +276,13 @@ func _physics_process(delta):
 			curr_input_state = INPUT_STATE.control
 			curr_action_state = ACTION_STATE.idle
 			hit_momentum = Vector2()
+			
+	if special_cooldown_timer != 0:
+		special_cooldown_timer = max(special_cooldown_timer - delta, 0)
+		special_meter.value = min(1 - special_cooldown_timer / SPECIAL_COOLDOWN, 1) * special_meter.max_value
+		special_meter.update()
+	elif special_meter.visible:
+		special_meter.visible = false
 
 	# update world state
 	_update_world_state()
@@ -366,6 +386,6 @@ func _hit_test():
 func create_fireball():
 	var fireball = FIREBALL_SCENE.instance()
 	get_parent().get_parent().add_child(fireball)
-	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER)
-	fireball.position = position + Vector2(50 * sign(last_input_direction.x), 0)
+	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER, FIREBALL_SCALE)
+	fireball.position = position + Vector2(10 * sign(last_input_direction.x), 0)
 
