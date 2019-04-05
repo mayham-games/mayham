@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://BasicPlayer.gd" type="Script" id=1]
 [ext_resource path="res://runAnim/PigBRun_00000.png" type="Texture" id=2]
@@ -35,6 +35,8 @@
 [ext_resource path="res://bubble_a2.png" type="Texture" id=33]
 [ext_resource path="res://bubble_b.png" type="Texture" id=34]
 [ext_resource path="res://fonts/KOMIKAX_.ttf" type="DynamicFontData" id=35]
+[ext_resource path="res://SpecialProgressBack.png" type="Texture" id=36]
+[ext_resource path="res://SpecialProgress.png" type="Texture" id=37]
 
 [sub_resource type="SpriteFrames" id=1]
 
@@ -45,7 +47,12 @@ animations = [ {
 "speed": 50.0
 } ]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="CircleShape2D" id=2]
+
+custom_solver_bias = 0.0
+radius = 32.0618
+
+[sub_resource type="DynamicFont" id=3]
 
 size = 20
 use_mipmaps = false
@@ -53,12 +60,7 @@ use_filter = false
 font_data = ExtResource( 35 )
 _sections_unfolded = [ "Font", "Font/fallback", "Settings" ]
 
-[sub_resource type="CircleShape2D" id=3]
-
-custom_solver_bias = 0.0
-radius = 32.0618
-
-[node name="Player" type="KinematicBody2D" index="0"]
+[node name="Player" type="KinematicBody2D"]
 
 position = Vector2( 630, 178 )
 input_pickable = false
@@ -73,11 +75,11 @@ visible = false
 scale = Vector2( 0.13, 0.13 )
 frames = SubResource( 1 )
 animation = "run"
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="PlayerSprite" type="Sprite" parent="." index="1"]
 
-scale = Vector2( 0.2, 0.2 )
+scale = Vector2( 0.18, 0.18 )
 texture = ExtResource( 32 )
 _sections_unfolded = [ "Transform" ]
 
@@ -89,27 +91,31 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Bubble_s" type="Sprite" parent="." index="3"]
 
-scale = Vector2( 0.08, 0.08 )
+scale = Vector2( 0.16, 0.16 )
 texture = ExtResource( 34 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="ScoreLabel" type="Label" parent="." index="4"]
+[node name="PlayerCollision" type="CollisionShape2D" parent="." index="4"]
+
+shape = SubResource( 2 )
+
+[node name="ScoreLabel" type="Label" parent="." index="5"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = -22.0
-margin_top = -65.0
-margin_right = 23.0
-margin_bottom = -31.0
+margin_left = -20.0
+margin_top = -71.0
+margin_right = 25.0
+margin_bottom = -37.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 text = "0"
 align = 1
 valign = 1
@@ -118,8 +124,35 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Margin", "custom_fonts" ]
 
-[node name="PlayerCollision" type="CollisionShape2D" parent="." index="5"]
+[node name="SpecialMeter" type="TextureProgress" parent="." index="6"]
 
-shape = SubResource( 3 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -25.0
+margin_top = -39.0
+margin_right = 25.0
+margin_bottom = -34.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+min_value = 0.0
+max_value = 100.0
+step = 0.1
+page = 0.0
+value = 50.0
+exp_edit = false
+rounded = false
+texture_under = ExtResource( 36 )
+texture_over = null
+texture_progress = ExtResource( 37 )
+radial_fill_degrees = 360.0
+radial_center_offset = Vector2( 0, 0 )
+nine_patch_stretch = false
+_sections_unfolded = [ "Radial Fill", "Textures" ]
 
 
