@@ -50,8 +50,19 @@ var hit_momentum = Vector2()		# knock back applied after getting hit
 var special_cooldown_timer = 0 
 var hit_slow = Vector2()		# decay factor for hit_momentum
 
+# ART / ANIMATION
+onready var _bubble = $Bubble
+onready var _sprite = $PlayerSprite
+onready var _sprite_scale = _sprite.scale.x
 onready var anim = $PlayerAnim		# animation of player sprite
 onready var anim_scale = anim.scale.x
+
+const P_BLUE  = Color( 0.0, 0.7, 1.0, 1 )
+const P_RED   = Color( 1.0, 0.3, 0.6, 1 )
+const P_GREEN = Color( 0.0, 0.8, 0.4, 1 )
+const P_PURP  = Color( 0.6, 0.2, 1.0, 1 )
+onready var _player_color = P_BLUE
+
 # Nodes
 onready var score_label = $ScoreLabel
 onready var special_meter = $SpecialMeter
@@ -109,12 +120,13 @@ func _ready():
 	controller.connect("action_attack", self, "_on_player_attack")
 	controller.connect("action_special", self, "_on_player_special")
 
-	anim.show()
-	score_label.add_color_override("font_color",Color(1,1,1,1))
-	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
+	# set player color
+	# _bubble.modulate = P_BLUE
+	_player_color = self._random_color()
+	_bubble.modulate = _player_color
 
 	print(position)
-	anim.show()
+	#anim.show()
 	score_label.add_color_override("font_color",Color(1,1,1,1))
 	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
 	
@@ -210,18 +222,20 @@ func _execute_player_jump():
 func _execute_player_left():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		anim.scale.x = -anim_scale
-		if not anim.is_playing():
-			anim.play()
+		_sprite.scale.x = -_sprite_scale
+		#anim.scale.x = -anim_scale
+		#if not anim.is_playing():
+			#anim.play()
 
 	last_input_direction = LEFT_DIR
 
 func _execute_player_right():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		anim.scale.x = anim_scale
-		if not anim.is_playing():
-			anim.play()
+		_sprite.scale.x = _sprite_scale
+		#anim.scale.x = anim_scale
+		#if not anim.is_playing():
+			#anim.play()
 
 	last_input_direction = RIGHT_DIR
 
@@ -247,7 +261,7 @@ func _execute_player_special():
 func _execute_player_stop():
 	if curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.idle
-		anim.stop()			#Jordan
+		#anim.stop()			#Jordan
 
 func _update_world_state():
 	if curr_world_state == WORLD_STATE.grounded and !is_on_floor():
@@ -329,7 +343,7 @@ func _physics_process(delta):
 		curr_velocity.x = sign(curr_velocity.x) * min(abs(curr_velocity.x), GROUND_SPEED)
 	elif curr_action_state == ACTION_STATE.idle:
 		curr_velocity.x = NO_DIR.x
-		anim.stop()
+		#anim.stop()
 	elif curr_action_state == ACTION_STATE.knock_back:
 		curr_velocity = hit_momentum
 		hit_momentum.x -= hit_slow.x*delta
@@ -389,3 +403,16 @@ func create_fireball():
 	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER, FIREBALL_SCALE)
 	fireball.position = position + Vector2(10 * sign(last_input_direction.x), 0)
 
+func _random_color():
+	randomize()
+	var list = [1.0, 0.7, 0.0]
+	if randi()%2 == 0:
+		list = [1.0, 0.5, 0.2]
+	var x = randi()%list.size()
+	var c1 = list[x]
+	list.remove(x)
+	x = randi()%list.size()
+	var c2 = list[x]
+	list.remove(x)
+	var c3 = list[0]
+	return Color(c1,c2,c3)
