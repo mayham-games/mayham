@@ -16,6 +16,7 @@ const GROUND_SPEED = 200 # speed that the player moves on the ground
 const JUMP_STRENGTH = -550 # metric for calculating jump height and duration
 const MASS = 425 # mass metric for push back calculations
 const DASH_SPEED = 800 # speed that the player moves when dashing
+const DASH_POWER = 200 # strength of the hit when the player is dashing
 const WALL_JUMP_SPEED = 400 # speed the player moves away from a wall when wall jumping
 const WALL_JUMP_DECAY = 0.85
 # Variables
@@ -26,8 +27,9 @@ var curr_velocity = Vector2(0, 0)
 const MAX_WALL_JUMP_CNT = 5 # Max number of times a player can wall jump before needing to touch the ground again
 const MAX_DASH_CNT = 2 # Max number of times a player can dash before needing to touch the ground
 const MAX_JUMP_CNT = 2 # Max number of times a player can jump until needing to touch the ground
-const ATTACK_POWER = 350 # Strength of a players attack
+const ATTACK_POWER = 75 # Strength of a players attack
 const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after attacking
+const ATTACK_OFFSET = Vector2(30, 0) # how far away from the player the punch hitbox should appear
 const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
@@ -36,6 +38,9 @@ const FIREBALL_SCENE = preload("Fireball.tscn")
 const FIREBALL_SPEED = 400
 const FIREBALL_POWER = 100
 const FIREBALL_SCALE = 2
+const PUNCH_BOX_SCENE = preload("res://PunchBox.tscn")
+const DASH_BOX_SCENE = preload("res://DashBox.tscn")
+
 # Variables
 var wall_jump_cnt = 0
 var wall_jump_dir = NO_DIR
@@ -209,6 +214,9 @@ func _execute_player_dash():
 		curr_input_state = INPUT_STATE.cooldown
 		dash_cnt += 1
 		cooldown_time += DASH_COOLDOWN
+		var dash_box = DASH_BOX_SCENE.instance()
+		add_child(dash_box)
+		dash_box.init(NO_DIR, DASH_POWER, DASH_COOLDOWN)
 
 func _execute_player_jump():
 	if curr_world_state == WORLD_STATE.air_walled and wall_jump_cnt < MAX_WALL_JUMP_CNT:
@@ -246,7 +254,10 @@ func _execute_player_attack():
 	curr_action_state = ACTION_STATE.attack
 	cooldown_time += ATTACK_COOLDOWN
 	curr_input_state = INPUT_STATE.cooldown
-	
+	var punch_box = PUNCH_BOX_SCENE.instance()
+	add_child(punch_box)
+	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN)
+
 func _execute_player_special():
 	if special_cooldown_timer == 0:
 		create_fireball()
@@ -289,7 +300,7 @@ func _update_world_state():
 		jump_cnt = 0
 
 func _physics_process(delta):
-	# update control state
+	# update control state	
 	if curr_input_state == INPUT_STATE.hit or curr_input_state == INPUT_STATE.cooldown:
 		cooldown_time = max(cooldown_time - delta, 0)
 		stun_cooldown = max(stun_cooldown - delta, 0)
@@ -393,9 +404,8 @@ func vector_hit(power, vector):
 	curr_input_state = INPUT_STATE.hit
 	curr_action_state = ACTION_STATE.knock_back
 	anim.stop()
-	hit_momentum = vector*10*(power)
+	hit_momentum = vector*10*(power) + curr_velocity
 	hit_slow = hit_momentum*(10/(STUN_COOLDOWN*power))
-	hit_momentum += curr_velocity
 	#curr_velocity.y = hit_momentum.y
 
 func position_hit(power, pos):
