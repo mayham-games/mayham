@@ -28,28 +28,28 @@ const MOTION_AXIS = "axis"
 const MOTION_AXIS_VALUE = "axis_value"
 
 const DEFAULT_CONTROLS = {
-	ACTION_JUMP : { 
+	ACTION_JUMP : {
 		INPUT_TYPE : INPUT_BUTTON,
 		BUTTON_INDEX : JOY_XBOX_A
 	},
-	ACTION_ATTACK : { 
+	ACTION_ATTACK : {
 		INPUT_TYPE : INPUT_BUTTON,
 		BUTTON_INDEX : JOY_XBOX_B
 	},
-	ACTION_DASH : { 
+	ACTION_DASH : {
 		INPUT_TYPE : INPUT_BUTTON,
 		BUTTON_INDEX : JOY_XBOX_X
 	},
-	ACTION_SPECIAL : { 
+	ACTION_SPECIAL : {
 		INPUT_TYPE : INPUT_BUTTON,
 		BUTTON_INDEX : JOY_XBOX_Y
 	},
-	ACTION_LEFT : { 
+	ACTION_LEFT : {
 		INPUT_TYPE : INPUT_MOTION,
 		MOTION_AXIS : JOY_AXIS_0,
 		MOTION_AXIS_VALUE : -1.0
 	},
-	ACTION_RIGHT : { 
+	ACTION_RIGHT : {
 		INPUT_TYPE : INPUT_MOTION,
 		MOTION_AXIS : JOY_AXIS_0,
 		MOTION_AXIS_VALUE : 1.0
@@ -77,31 +77,31 @@ func _ready():
 
 func _setupInputEvents(controls):
 	for action in controls.keys():
-		
+
 		var control_input = controls[action]
-		
+
 		if control_input.has(INPUT_TYPE):
-			
-			# We only want to create the event if we know how to handle that type and we have all 
+
+			# We only want to create the event if we know how to handle that type and we have all
 			# the necessary information for its input type
 			if control_input[INPUT_TYPE] == INPUT_BUTTON and control_input.has(BUTTON_INDEX):
-				
+
 				var eventButton = InputEventJoypadButton.new()
 				eventButton.set_device(number - 1)
 				eventButton.set_button_index(control_input[BUTTON_INDEX])
 				eventButton.set_pressed(true)
-				
+
 				if not InputMap.has_action("p" + str(number) + "_" + action):
 					InputMap.add_action("p" + str(number) + "_" + action)
 				InputMap.action_add_event("p" + str(number) + "_" + action, eventButton)
-				
+
 			elif control_input[INPUT_TYPE] == INPUT_MOTION and control_input.has(MOTION_AXIS) and control_input.has(MOTION_AXIS_VALUE):
-				
+
 				var eventAxis = InputEventJoypadMotion.new()
 				eventAxis.set_device(number - 1)
 				eventAxis.set_axis(control_input[MOTION_AXIS])
 				eventAxis.set_axis_value(control_input[MOTION_AXIS_VALUE])
-				
+
 				if not InputMap.has_action("p" + str(number) + "_" + action):
 					InputMap.add_action("p" + str(number) + "_" + action)
 				InputMap.action_add_event("p" + str(number) + "_" + action, eventAxis)

@@ -31,23 +31,41 @@ const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will b
 const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
+const SPECIAL_COOLDOWN = 1.0 # number of secs until the player can use its special can be used again
+const FIREBALL_SCENE = preload("Fireball.tscn")
+const FIREBALL_SPEED = 400
+const FIREBALL_POWER = 100
+const FIREBALL_SCALE = 2
 # Variables
 var wall_jump_cnt = 0
 var wall_jump_dir = NO_DIR
 var jump_cnt = 1
 var dash_cnt = 0
-var last_input_direction = Vector2(0, 0)
+var last_input_direction = RIGHT_DIR
 var _score = 0
 var _number = 0
 var cooldown_time = 0
 var stun_cooldown = 0		# timer for secs until input from controller will be accepted after getting hit
 var hit_momentum = Vector2()		# knock back applied after getting hit
+var special_cooldown_timer = 0 
 var hit_slow = Vector2()		# decay factor for hit_momentum
 
+# ART / ANIMATION
+onready var _bubble = $Bubble
+onready var _sprite = $PlayerSprite
+onready var _sprite_scale = _sprite.scale.x
 onready var anim = $PlayerAnim		# animation of player sprite
 onready var anim_scale = anim.scale.x
+
+const P_BLUE  = Color( 0.0, 0.7, 1.0, 1 )
+const P_RED   = Color( 1.0, 0.3, 0.6, 1 )
+const P_GREEN = Color( 0.0, 0.8, 0.4, 1 )
+const P_PURP  = Color( 0.6, 0.2, 1.0, 1 )
+onready var _player_color = P_BLUE
+
 # Nodes
 onready var score_label = $ScoreLabel
+onready var special_meter = $SpecialMeter
 
 ## State Spaces **see achitecture documents for explanation on states
 # Constants
@@ -84,7 +102,8 @@ enum ACTIONS {
 	stop,
 	jump,
 	dash,
-	attack
+	attack,
+	special
 }
 # Variables
 var controller
@@ -100,21 +119,32 @@ func _ready():
 	controller.connect("action_right", self, "_on_player_right")
 	controller.connect("action_stop", self, "_on_player_stop")
 	controller.connect("action_attack", self, "_on_player_attack")
-	
-	anim.show()
+	controller.connect("action_special", self, "_on_player_special")
+
+	# set player color
+	# _bubble.modulate = P_BLUE
+	_player_color = self._random_color()
+	_bubble.modulate = _player_color
+
+	print(position)
+	#anim.show()
 	score_label.add_color_override("font_color",Color(1,1,1,1))
 	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
 	
-	print(position)
-	
+	# Start the game without a special avaliable
+	special_cooldown_timer = SPECIAL_COOLDOWN
+	special_meter.visible = true
+	special_meter.value = (1 - special_cooldown_timer / SPECIAL_COOLDOWN) * special_meter.max_value
+	special_meter.update()
+
 func init(number, position_x):
 	_number = number
 	self.position.x += position_x
-	
+
 func _on_player_start():
 	print("START")
 	_print_debug()
-	
+
 func _print_debug():
 	print("Input state:")
 	match curr_input_state:
@@ -150,8 +180,8 @@ func _print_debug():
 			print("\tdash")
 		ACTION_STATE.knock_back:
 			print("\tknock_back")
-	
-	
+
+
 func _on_player_dash():
 	input_queue.append(ACTIONS.dash)
 
@@ -166,6 +196,9 @@ func _on_player_right():
 
 func _on_player_attack():
 	input_queue.append(ACTIONS.attack)
+	
+func _on_player_special():
+	input_queue.append(ACTIONS.special)
 
 func _on_player_stop():
 	input_queue.append(ACTIONS.stop)
@@ -192,31 +225,46 @@ func _execute_player_jump():
 func _execute_player_left():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		anim.scale.x = -anim_scale
-		if not anim.is_playing():
-			anim.play()
-	
+		_sprite.scale.x = -_sprite_scale
+		#anim.scale.x = -anim_scale
+		#if not anim.is_playing():
+			#anim.play()
+
 	last_input_direction = LEFT_DIR
 
 func _execute_player_right():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		anim.scale.x = anim_scale
-		if not anim.is_playing():
-			anim.play()
-	
+		_sprite.scale.x = _sprite_scale
+		#anim.scale.x = anim_scale
+		#if not anim.is_playing():
+			#anim.play()
+
 	last_input_direction = RIGHT_DIR
 
 func _execute_player_attack():
 	curr_action_state = ACTION_STATE.attack
 	cooldown_time += ATTACK_COOLDOWN
 	curr_input_state = INPUT_STATE.cooldown
-	rotate(90 * sign(last_input_direction.x)) # Just here to show the attack is happening, should be removed soon
-	#TODO: Add the hitbox generation stuff here
+	
+func _execute_player_special():
+	if special_cooldown_timer == 0:
+		create_fireball()
+		
+		curr_action_state = ACTION_STATE.attack
+		cooldown_time += ATTACK_COOLDOWN
+		curr_input_state = INPUT_STATE.cooldown
+		
+		special_cooldown_timer = SPECIAL_COOLDOWN
+		special_meter.visible = true
+		special_meter.value = (1 - special_cooldown_timer / SPECIAL_COOLDOWN) * special_meter.max_value
+
+
 
 func _execute_player_stop():
 	if curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.idle
+		#anim.stop()			#Jordan
 
 func _update_world_state():
 	if curr_world_state == WORLD_STATE.grounded and !is_on_floor():
@@ -250,9 +298,16 @@ func _physics_process(delta):
 			curr_action_state = ACTION_STATE.idle
 			hit_momentum = Vector2()
 			
+	if special_cooldown_timer != 0:
+		special_cooldown_timer = max(special_cooldown_timer - delta, 0)
+		special_meter.value = min(1 - special_cooldown_timer / SPECIAL_COOLDOWN, 1) * special_meter.max_value
+		special_meter.update()
+	elif special_meter.visible:
+		special_meter.visible = false
+
 	# update world state
 	_update_world_state()
-	
+
 	# update control state
 	if curr_input_state == INPUT_STATE.control:
 		var action = -1
@@ -272,6 +327,8 @@ func _physics_process(delta):
 					_execute_player_dash()
 				ACTIONS.attack:
 					_execute_player_attack()
+				ACTIONS.special:
+					_execute_player_special()
 	else:
 		# Remove all actions when not able to control
 		# not doing this allows for action buffering which create some cool movement options
@@ -289,11 +346,11 @@ func _physics_process(delta):
 			curr_velocity.x = last_input_direction.x * GROUND_SPEED
 		else:
 			curr_velocity.x += last_input_direction.x * GROUND_SPEED
-		
+
 		curr_velocity.x = sign(curr_velocity.x) * min(abs(curr_velocity.x), GROUND_SPEED)
 	elif curr_action_state == ACTION_STATE.idle:
 		curr_velocity.x = NO_DIR.x
-		anim.stop()
+		#anim.stop()
 	elif curr_action_state == ACTION_STATE.knock_back:
 		curr_velocity = hit_momentum
 		hit_momentum.x -= hit_slow.x*delta
@@ -316,13 +373,13 @@ func _physics_process(delta):
 
 func get_number():
 	return _number
-				
+
 func get_score():
 	return _score
-				
+
 func _update_score_label():
 	score_label.text = str(_score)
-				
+
 func increment_score_by(number):
 	_score += number
 	_update_score_label()
@@ -349,8 +406,27 @@ func _hit_test():
 	# vector hit test
 	#var vec = Vector2(rand_range(-1,1),rand_range(-1,0))
 	#vector_hit(100, vec)
-	
+
 	# position hit test
 	var vec = position + Vector2(100,100)
 	position_hit(100, vec)
-	
+
+func create_fireball():
+	var fireball = FIREBALL_SCENE.instance()
+	get_parent().get_parent().add_child(fireball)
+	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER, FIREBALL_SCALE)
+	fireball.position = position + Vector2(10 * sign(last_input_direction.x), 0)
+
+func _random_color():
+	randomize()
+	var list = [1.0, 0.7, 0.0]
+	if randi()%2 == 0:
+		list = [1.0, 0.5, 0.2]
+	var x = randi()%list.size()
+	var c1 = list[x]
+	list.remove(x)
+	x = randi()%list.size()
+	var c2 = list[x]
+	list.remove(x)
+	var c3 = list[0]
+	return Color(c1,c2,c3)
