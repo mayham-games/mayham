@@ -16,6 +16,7 @@ const GROUND_SPEED = 200 # speed that the player moves on the ground
 const JUMP_STRENGTH = -550 # metric for calculating jump height and duration
 const MASS = 425 # mass metric for push back calculations
 const DASH_SPEED = 800 # speed that the player moves when dashing
+const DASH_POWER = 200 # strength of the hit when the player is dashing
 const WALL_JUMP_SPEED = 400 # speed the player moves away from a wall when wall jumping
 const WALL_JUMP_DECAY = 0.85
 # Variables
@@ -26,8 +27,9 @@ var curr_velocity = Vector2(0, 0)
 const MAX_WALL_JUMP_CNT = 5 # Max number of times a player can wall jump before needing to touch the ground again
 const MAX_DASH_CNT = 2 # Max number of times a player can dash before needing to touch the ground
 const MAX_JUMP_CNT = 2 # Max number of times a player can jump until needing to touch the ground
-const ATTACK_POWER = 350 # Strength of a players attack
+const ATTACK_POWER = 75 # Strength of a players attack
 const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after attacking
+const ATTACK_OFFSET = Vector2(30, 0) # how far away from the player the punch hitbox should appear
 const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
@@ -36,6 +38,9 @@ const FIREBALL_SCENE = preload("Fireball.tscn")
 const FIREBALL_SPEED = 400
 const FIREBALL_POWER = 100
 const FIREBALL_SCALE = 2
+const PUNCH_BOX_SCENE = preload("res://PunchBox.tscn")
+const DASH_BOX_SCENE = preload("res://DashBox.tscn")
+
 # Variables
 var wall_jump_cnt = 0
 var wall_jump_dir = NO_DIR
@@ -50,8 +55,19 @@ var hit_momentum = Vector2()		# knock back applied after getting hit
 var special_cooldown_timer = 0 
 var hit_slow = Vector2()		# decay factor for hit_momentum
 
+# ART / ANIMATION
+onready var _bubble = $Bubble
+onready var _sprite = $PlayerSprite
+onready var _sprite_scale = _sprite.scale.x
 onready var anim = $PlayerAnim		# animation of player sprite
 onready var anim_scale = anim.scale.x
+
+const P_BLUE  = Color( 0.0, 0.7, 1.0, 1 )
+const P_RED   = Color( 1.0, 0.3, 0.6, 1 )
+const P_GREEN = Color( 0.0, 0.8, 0.4, 1 )
+const P_PURP  = Color( 0.6, 0.2, 1.0, 1 )
+onready var _player_color = P_BLUE
+
 # Nodes
 onready var score_label = $ScoreLabel
 onready var special_meter = $SpecialMeter
@@ -109,12 +125,13 @@ func _ready():
 	controller.connect("action_attack", self, "_on_player_attack")
 	controller.connect("action_special", self, "_on_player_special")
 
-	anim.show()
-	score_label.add_color_override("font_color",Color(1,1,1,1))
-	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
+	# set player color
+	# _bubble.modulate = P_BLUE
+	_player_color = self._random_color()
+	_bubble.modulate = _player_color
 
 	print(position)
-	anim.show()
+	#anim.show()
 	score_label.add_color_override("font_color",Color(1,1,1,1))
 	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
 	
@@ -140,7 +157,7 @@ func _print_debug():
 		INPUT_STATE.cooldown:
 			print("\tcooldown ", cooldown_time)
 		INPUT_STATE.hit:
-			print("\thit")
+			print("\thit", stun_cooldown)
 
 	print("World state:")
 	match curr_world_state:
@@ -194,6 +211,9 @@ func _execute_player_dash():
 		curr_input_state = INPUT_STATE.cooldown
 		dash_cnt += 1
 		cooldown_time += DASH_COOLDOWN
+		var dash_box = DASH_BOX_SCENE.instance()
+		add_child(dash_box)
+		dash_box.init(NO_DIR, DASH_POWER, DASH_COOLDOWN)
 
 func _execute_player_jump():
 	if curr_world_state == WORLD_STATE.air_walled and wall_jump_cnt < MAX_WALL_JUMP_CNT:
@@ -210,18 +230,20 @@ func _execute_player_jump():
 func _execute_player_left():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		anim.scale.x = -anim_scale
-		if not anim.is_playing():
-			anim.play()
+		_sprite.scale.x = -_sprite_scale
+		#anim.scale.x = -anim_scale
+		#if not anim.is_playing():
+			#anim.play()
 
 	last_input_direction = LEFT_DIR
 
 func _execute_player_right():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
-		anim.scale.x = anim_scale
-		if not anim.is_playing():
-			anim.play()
+		_sprite.scale.x = _sprite_scale
+		#anim.scale.x = anim_scale
+		#if not anim.is_playing():
+			#anim.play()
 
 	last_input_direction = RIGHT_DIR
 
@@ -229,7 +251,10 @@ func _execute_player_attack():
 	curr_action_state = ACTION_STATE.attack
 	cooldown_time += ATTACK_COOLDOWN
 	curr_input_state = INPUT_STATE.cooldown
-	
+	var punch_box = PUNCH_BOX_SCENE.instance()
+	add_child(punch_box)
+	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN)
+
 func _execute_player_special():
 	if special_cooldown_timer == 0:
 		create_fireball()
@@ -247,7 +272,7 @@ func _execute_player_special():
 func _execute_player_stop():
 	if curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.idle
-		anim.stop()			#Jordan
+		#anim.stop()			#Jordan
 
 func _update_world_state():
 	if curr_world_state == WORLD_STATE.grounded and !is_on_floor():
@@ -268,7 +293,7 @@ func _update_world_state():
 		jump_cnt = 0
 
 func _physics_process(delta):
-	# update control state
+	# update control state	
 	if curr_input_state == INPUT_STATE.hit or curr_input_state == INPUT_STATE.cooldown:
 		cooldown_time = max(cooldown_time - delta, 0)
 		stun_cooldown = max(stun_cooldown - delta, 0)
@@ -329,7 +354,7 @@ func _physics_process(delta):
 		curr_velocity.x = sign(curr_velocity.x) * min(abs(curr_velocity.x), GROUND_SPEED)
 	elif curr_action_state == ACTION_STATE.idle:
 		curr_velocity.x = NO_DIR.x
-		anim.stop()
+		#anim.stop()
 	elif curr_action_state == ACTION_STATE.knock_back:
 		curr_velocity = hit_momentum
 		hit_momentum.x -= hit_slow.x*delta
@@ -365,9 +390,8 @@ func vector_hit(power, vector):
 	curr_input_state = INPUT_STATE.hit
 	curr_action_state = ACTION_STATE.knock_back
 	anim.stop()
-	hit_momentum = vector*10*(power)
+	hit_momentum = vector*10*(power) + curr_velocity
 	hit_slow = hit_momentum*(10/(STUN_COOLDOWN*power))
-	hit_momentum += curr_velocity
 	#curr_velocity.y = hit_momentum.y
 
 func position_hit(power, pos):
@@ -389,3 +413,16 @@ func create_fireball():
 	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER, FIREBALL_SCALE)
 	fireball.position = position + Vector2(10 * sign(last_input_direction.x), 0)
 
+func _random_color():
+	randomize()
+	var list = [1.0, 0.7, 0.0]
+	if randi()%2 == 0:
+		list = [1.0, 0.5, 0.2]
+	var x = randi()%list.size()
+	var c1 = list[x]
+	list.remove(x)
+	x = randi()%list.size()
+	var c2 = list[x]
+	list.remove(x)
+	var c3 = list[0]
+	return Color(c1,c2,c3)
