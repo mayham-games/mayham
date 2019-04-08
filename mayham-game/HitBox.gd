@@ -7,12 +7,14 @@ var PUNCH_BOX = 'punch'
 var time_to_death = 0.5
 var power = 0
 var box_type = 'base'
+var _color = Color(0,0,0)
 
-func init(start_pos, strength, life_time=0.5, size=1):
+func init(start_pos, strength, life_time=0.5, size=1, color = Color(1,1,1)):
 	time_to_death = life_time
 	position += start_pos
 	power = strength
 	scale *= abs(size)
+	_color = color
 
 func _ready():
 	connect("body_entered", self, "on_body_entered")
