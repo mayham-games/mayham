@@ -7,6 +7,12 @@ extends Area2D
 var players_in_goal = null
 var players_not_in_goal = null
 
+var color = _random_color()
+
+onready var core = $Fire/particles_main
+onready var tail = $Fire/particles_tail
+onready var ring = $Ring
+
 func init(players):
 	var player_list = ResourceLoader.load("res://PlayerLinkedList.gd")
 	players_in_goal = player_list.new()
@@ -26,6 +32,7 @@ func _ready():
 	connect("body_entered", self, "_on_Goal_entered")
 	connect("body_exited", self, "_on_Goal_exited")
 
+	set_color(_random_color())
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
 	pass
@@ -64,3 +71,29 @@ func collect_players():
 func has_winner(winning_score):
 	return players_in_goal.has_winner(winning_score) or players_not_in_goal.has_winner(winning_score)
 
+func change_color():
+	set_color(_random_color())
+
+func _random_color():
+	randomize()
+	var list = [1.0, 0.7, 0.0]
+	if randi()%2 == 0:
+		list = [1.0, 0.5, 0.2]
+	var x = randi()%list.size()
+	var c1 = list[x]
+	list.remove(x)
+	x = randi()%list.size()
+	var c2 = list[x]
+	list.remove(x)
+	var c3 = list[0]
+	return Color(c1,c2,c3)
+	
+func set_color(color):
+	var x = 2
+	var y = 0
+	var a = 0.6
+	
+	var core_col = Color( (color[0]*x-y)/(x+y), (color[1]*x-y)/(x+y), (color[2]*x-y)/(x+y), a )
+	core.modulate = core_col
+	tail.modulate = Color( color[0], color[1], color[2], a)
+	ring.modulate = Color( color[0], color[1], color[2], 0.3)
