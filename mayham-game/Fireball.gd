@@ -14,7 +14,7 @@ func _ready():
 	connect("body_entered", self, "on_body_entered")
 	connect("area_entered", self, "on_area_entered")
 	
-func init(generator, direction, speed, power, size):
+func init(generator, direction, speed, power, size, color = Color(1,1,1)):
 	fire_direction = -1 * direction
 	fireball_speed = speed
 	fire_power = power
@@ -22,6 +22,7 @@ func init(generator, direction, speed, power, size):
 	core.rotation *= direction
 	tail.rotation *= direction
 	scale *= size
+	set_color(color)
 
 func _process(delta):
 	var speed_x = -1
@@ -42,3 +43,12 @@ func on_area_entered(area):
 	if 'fire_generator' in area:
 		if area.fire_generator != fire_generator:
 			queue_free()
+
+func set_color(color):
+	var x = 2
+	var y = 1
+	var a = 0.8
+	
+	var core_col = Color( (color[0]*x+y)/(x+y), (color[1]*x+y)/(x+y), (color[2]*x+y)/(x+y) )
+	core.modulate = core_col
+	tail.modulate = Color( color[0], color[1], color[2], a)
