@@ -256,7 +256,7 @@ func _execute_player_attack():
 	curr_input_state = INPUT_STATE.cooldown
 	var punch_box = PUNCH_BOX_SCENE.instance()
 	add_child(punch_box)
-	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN)
+	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN, 1, _player_color)
 
 func _execute_player_special():
 	if special_cooldown_timer == 0:
@@ -424,7 +424,7 @@ func _hit_test():
 func create_fireball():
 	var fireball = FIREBALL_SCENE.instance()
 	get_parent().get_parent().add_child(fireball)
-	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER, FIREBALL_SCALE)
+	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER, FIREBALL_SCALE, _player_color)
 	fireball.position = position + Vector2(10 * sign(last_input_direction.x), 0)
 
 func _random_color():

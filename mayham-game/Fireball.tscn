@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Fireball.gd" type="Script" id=1]
-[ext_resource path="res://PhazonParticle.png" type="Texture" id=2]
+[ext_resource path="res://PhazonParticle2.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -76,7 +76,6 @@ __meta__ = {
 
 [node name="Particles2D" type="Particles2D" parent="CollisionShape2D_1" index="0"]
 
-modulate = Color( 0.0808716, 0.318027, 0.390625, 1 )
 material = SubResource( 2 )
 rotation = 1.5708
 emitting = true
