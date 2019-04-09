@@ -19,6 +19,7 @@ const DASH_SPEED = 800 # speed that the player moves when dashing
 const DASH_POWER = 200 # strength of the hit when the player is dashing
 const WALL_JUMP_SPEED = 400 # speed the player moves away from a wall when wall jumping
 const WALL_JUMP_DECAY = 0.85
+const TERMINAL_HIT_VELOCITY = 1500 # max knockback velocity
 # Variables
 var curr_velocity = Vector2(0, 0)
 
@@ -29,7 +30,7 @@ const MAX_DASH_CNT = 2 # Max number of times a player can dash before needing to
 const MAX_JUMP_CNT = 2 # Max number of times a player can jump until needing to touch the ground
 const ATTACK_POWER = 75 # Strength of a players attack
 const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after attacking
-const ATTACK_OFFSET = Vector2(30, 0) # how far away from the player the punch hitbox should appear
+const ATTACK_OFFSET = Vector2(40, 0) # how far away from the player the punch hitbox should appear
 const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
 const WALL_JUMP_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after wall jumping
 const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be accepted after dashing
@@ -61,6 +62,7 @@ onready var _sprite = $PlayerSprite
 onready var _sprite_scale = _sprite.scale.x
 onready var anim = $PlayerAnim		# animation of player sprite
 onready var anim_scale = anim.scale.x
+onready var _trail = $Trail
 
 const P_BLUE  = Color( 0.0, 0.7, 1.0, 1 )
 const P_RED   = Color( 1.0, 0.3, 0.6, 1 )
@@ -129,6 +131,7 @@ func _ready():
 	# _bubble.modulate = P_BLUE
 	_player_color = self._random_color()
 	_bubble.modulate = _player_color
+	_trail.modulate = _player_color
 
 	print(position)
 	#anim.show()
@@ -253,7 +256,7 @@ func _execute_player_attack():
 	curr_input_state = INPUT_STATE.cooldown
 	var punch_box = PUNCH_BOX_SCENE.instance()
 	add_child(punch_box)
-	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN, 1, _player_color)
+	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN, _sprite.scale.x/_sprite_scale, _player_color)
 
 func _execute_player_special():
 	if special_cooldown_timer == 0:
@@ -402,7 +405,7 @@ func vector_hit(power, vector):
 	curr_input_state = INPUT_STATE.hit
 	curr_action_state = ACTION_STATE.knock_back
 	anim.stop()
-	hit_momentum = vector*10*(power) + curr_velocity
+	hit_momentum = (vector*10*(power) + curr_velocity).clamped(TERMINAL_HIT_VELOCITY)
 	hit_slow = hit_momentum*(10/(STUN_COOLDOWN*power))
 	#curr_velocity.y = hit_momentum.y
 
@@ -425,6 +428,10 @@ func create_fireball():
 	fireball.init(self, last_input_direction.x, FIREBALL_SPEED, FIREBALL_POWER, FIREBALL_SCALE, _player_color)
 	fireball.position = position + Vector2(10 * sign(last_input_direction.x), 0)
 
+func set_color(color):
+	_bubble.modulate = color
+	_trail.modulate = color
+	
 func _random_color():
 	randomize()
 	var list = [1.0, 0.7, 0.0]
