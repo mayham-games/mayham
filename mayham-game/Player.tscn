@@ -1,47 +1,113 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://BasicPlayer.gd" type="Script" id=1]
-[ext_resource path="res://runAnim/PigBRun_00000.png" type="Texture" id=2]
-[ext_resource path="res://runAnim/PigBRun_00001.png" type="Texture" id=3]
-[ext_resource path="res://runAnim/PigBRun_00002.png" type="Texture" id=4]
-[ext_resource path="res://runAnim/PigBRun_00003.png" type="Texture" id=5]
-[ext_resource path="res://runAnim/PigBRun_00004.png" type="Texture" id=6]
-[ext_resource path="res://runAnim/PigBRun_00005.png" type="Texture" id=7]
-[ext_resource path="res://runAnim/PigBRun_00006.png" type="Texture" id=8]
-[ext_resource path="res://runAnim/PigBRun_00007.png" type="Texture" id=9]
-[ext_resource path="res://runAnim/PigBRun_00008.png" type="Texture" id=10]
-[ext_resource path="res://runAnim/PigBRun_00009.png" type="Texture" id=11]
-[ext_resource path="res://runAnim/PigBRun_00010.png" type="Texture" id=12]
-[ext_resource path="res://runAnim/PigBRun_00011.png" type="Texture" id=13]
-[ext_resource path="res://runAnim/PigBRun_00012.png" type="Texture" id=14]
-[ext_resource path="res://runAnim/PigBRun_00013.png" type="Texture" id=15]
-[ext_resource path="res://runAnim/PigBRun_00014.png" type="Texture" id=16]
-[ext_resource path="res://runAnim/PigBRun_00015.png" type="Texture" id=17]
-[ext_resource path="res://runAnim/PigBRun_00016.png" type="Texture" id=18]
-[ext_resource path="res://runAnim/PigBRun_00017.png" type="Texture" id=19]
-[ext_resource path="res://runAnim/PigBRun_00018.png" type="Texture" id=20]
-[ext_resource path="res://runAnim/PigBRun_00019.png" type="Texture" id=21]
-[ext_resource path="res://runAnim/PigBRun_00020.png" type="Texture" id=22]
-[ext_resource path="res://runAnim/PigBRun_00021.png" type="Texture" id=23]
-[ext_resource path="res://runAnim/PigBRun_00022.png" type="Texture" id=24]
-[ext_resource path="res://runAnim/PigBRun_00023.png" type="Texture" id=25]
-[ext_resource path="res://runAnim/PigBRun_00024.png" type="Texture" id=26]
-[ext_resource path="res://runAnim/PigBRun_00025.png" type="Texture" id=27]
-[ext_resource path="res://runAnim/PigBRun_00026.png" type="Texture" id=28]
-[ext_resource path="res://runAnim/PigBRun_00027.png" type="Texture" id=29]
-[ext_resource path="res://runAnim/PigBRun_00028.png" type="Texture" id=30]
-[ext_resource path="res://runAnim/PigBRun_00029.png" type="Texture" id=31]
-[ext_resource path="res://temp_pig.png" type="Texture" id=32]
-[ext_resource path="res://bubble_a2.png" type="Texture" id=33]
-[ext_resource path="res://bubble_b.png" type="Texture" id=34]
-[ext_resource path="res://fonts/KOMIKAX_.ttf" type="DynamicFontData" id=35]
-[ext_resource path="res://SpecialProgressBack.png" type="Texture" id=36]
-[ext_resource path="res://SpecialProgress.png" type="Texture" id=37]
+[ext_resource path="res://c0.png" type="Texture" id=2]
+[ext_resource path="res://runAnim/PigBRun_00000.png" type="Texture" id=3]
+[ext_resource path="res://runAnim/PigBRun_00001.png" type="Texture" id=4]
+[ext_resource path="res://runAnim/PigBRun_00002.png" type="Texture" id=5]
+[ext_resource path="res://runAnim/PigBRun_00003.png" type="Texture" id=6]
+[ext_resource path="res://runAnim/PigBRun_00004.png" type="Texture" id=7]
+[ext_resource path="res://runAnim/PigBRun_00005.png" type="Texture" id=8]
+[ext_resource path="res://runAnim/PigBRun_00006.png" type="Texture" id=9]
+[ext_resource path="res://runAnim/PigBRun_00007.png" type="Texture" id=10]
+[ext_resource path="res://runAnim/PigBRun_00008.png" type="Texture" id=11]
+[ext_resource path="res://runAnim/PigBRun_00009.png" type="Texture" id=12]
+[ext_resource path="res://runAnim/PigBRun_00010.png" type="Texture" id=13]
+[ext_resource path="res://runAnim/PigBRun_00011.png" type="Texture" id=14]
+[ext_resource path="res://runAnim/PigBRun_00012.png" type="Texture" id=15]
+[ext_resource path="res://runAnim/PigBRun_00013.png" type="Texture" id=16]
+[ext_resource path="res://runAnim/PigBRun_00014.png" type="Texture" id=17]
+[ext_resource path="res://runAnim/PigBRun_00015.png" type="Texture" id=18]
+[ext_resource path="res://runAnim/PigBRun_00016.png" type="Texture" id=19]
+[ext_resource path="res://runAnim/PigBRun_00017.png" type="Texture" id=20]
+[ext_resource path="res://runAnim/PigBRun_00018.png" type="Texture" id=21]
+[ext_resource path="res://runAnim/PigBRun_00019.png" type="Texture" id=22]
+[ext_resource path="res://runAnim/PigBRun_00020.png" type="Texture" id=23]
+[ext_resource path="res://runAnim/PigBRun_00021.png" type="Texture" id=24]
+[ext_resource path="res://runAnim/PigBRun_00022.png" type="Texture" id=25]
+[ext_resource path="res://runAnim/PigBRun_00023.png" type="Texture" id=26]
+[ext_resource path="res://runAnim/PigBRun_00024.png" type="Texture" id=27]
+[ext_resource path="res://runAnim/PigBRun_00025.png" type="Texture" id=28]
+[ext_resource path="res://runAnim/PigBRun_00026.png" type="Texture" id=29]
+[ext_resource path="res://runAnim/PigBRun_00027.png" type="Texture" id=30]
+[ext_resource path="res://runAnim/PigBRun_00028.png" type="Texture" id=31]
+[ext_resource path="res://runAnim/PigBRun_00029.png" type="Texture" id=32]
+[ext_resource path="res://temp_pig.png" type="Texture" id=33]
+[ext_resource path="res://bubble_a2.png" type="Texture" id=34]
+[ext_resource path="res://bubble_b.png" type="Texture" id=35]
+[ext_resource path="res://fonts/KOMIKAX_.ttf" type="DynamicFontData" id=36]
+[ext_resource path="res://SpecialProgressBack.png" type="Texture" id=37]
+[ext_resource path="res://SpecialProgress.png" type="Texture" id=38]
+
+[sub_resource type="Gradient" id=5]
+
+offsets = PoolRealArray( 0, 1 )
+colors = PoolColorArray( 1, 1, 1, 0.480667, 0.996094, 0.996094, 0.996094, 0 )
+
+[sub_resource type="GradientTexture" id=6]
+
+flags = 4
+gradient = SubResource( 5 )
+width = 2048
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="Curve" id=7]
+
+min_value = 0.0
+max_value = 1.0
+bake_resolution = 100
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.489258 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=8]
+
+flags = 4
+width = 2048
+curve = SubResource( 7 )
+
+[sub_resource type="ParticlesMaterial" id=4]
+
+render_priority = 0
+trail_divisor = 1
+emission_shape = 0
+flag_align_y = false
+flag_rotate_y = false
+flag_disable_z = true
+spread = 45.0
+flatness = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 1.0
+initial_velocity_random = 0.0
+angular_velocity = 0.0
+angular_velocity_random = 0.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 0.0
+linear_accel_random = 0.0
+radial_accel = 0.0
+radial_accel_random = 0.0
+tangential_accel = 0.0
+tangential_accel_random = 0.0
+damping = 0.0
+damping_random = 0.0
+angle = 0.0
+angle_random = 0.0
+scale = 0.26
+scale_random = 0.0
+scale_curve = SubResource( 8 )
+color_ramp = SubResource( 6 )
+hue_variation = 0.0
+hue_variation_random = 0.0
+anim_speed = 0.0
+anim_speed_random = 0.0
+anim_offset = 0.0
+anim_offset_random = 0.0
+anim_loop = false
+_sections_unfolded = [ "Color", "Gravity", "Scale", "Trail" ]
 
 [sub_resource type="SpriteFrames" id=1]
 
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 28 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 28 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ) ],
 "loop": true,
 "name": "run",
 "speed": 50.0
@@ -57,7 +123,7 @@ radius = 32.0618
 size = 20
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 35 )
+font_data = ExtResource( 36 )
 _sections_unfolded = [ "Font", "Font/fallback", "Settings" ]
 
 [node name="Player" type="KinematicBody2D"]
@@ -69,7 +135,29 @@ collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
 
-[node name="PlayerAnim" type="AnimatedSprite" parent="." index="0"]
+[node name="Trail" type="Particles2D" parent="." index="0"]
+
+emitting = true
+amount = 5
+lifetime = 0.5
+one_shot = false
+preprocess = 0.0
+speed_scale = 2.0
+explosiveness = 0.0
+randomness = 0.0
+fixed_fps = 0
+fract_delta = true
+visibility_rect = Rect2( -100, -100, 200, 200 )
+local_coords = false
+draw_order = 0
+process_material = SubResource( 4 )
+texture = ExtResource( 2 )
+normal_map = null
+h_frames = 1
+v_frames = 1
+_sections_unfolded = [ "Drawing", "Process Material", "Textures", "Time", "Transform" ]
+
+[node name="PlayerAnim" type="AnimatedSprite" parent="." index="1"]
 
 visible = false
 scale = Vector2( 0.13, 0.13 )
@@ -77,29 +165,29 @@ frames = SubResource( 1 )
 animation = "run"
 _sections_unfolded = [ "Transform", "Visibility" ]
 
-[node name="PlayerSprite" type="Sprite" parent="." index="1"]
+[node name="PlayerSprite" type="Sprite" parent="." index="2"]
 
 scale = Vector2( 0.18, 0.18 )
-texture = ExtResource( 32 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="Bubble" type="Sprite" parent="." index="2"]
-
-scale = Vector2( 0.16, 0.16 )
 texture = ExtResource( 33 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="Bubble_s" type="Sprite" parent="." index="3"]
+[node name="Bubble" type="Sprite" parent="." index="3"]
 
 scale = Vector2( 0.16, 0.16 )
 texture = ExtResource( 34 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="PlayerCollision" type="CollisionShape2D" parent="." index="4"]
+[node name="Bubble_s" type="Sprite" parent="." index="4"]
+
+scale = Vector2( 0.16, 0.16 )
+texture = ExtResource( 35 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="PlayerCollision" type="CollisionShape2D" parent="." index="5"]
 
 shape = SubResource( 2 )
 
-[node name="ScoreLabel" type="Label" parent="." index="5"]
+[node name="ScoreLabel" type="Label" parent="." index="6"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -124,7 +212,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Margin", "custom_fonts" ]
 
-[node name="SpecialMeter" type="TextureProgress" parent="." index="6"]
+[node name="SpecialMeter" type="TextureProgress" parent="." index="7"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -147,9 +235,9 @@ page = 0.0
 value = 50.0
 exp_edit = false
 rounded = false
-texture_under = ExtResource( 36 )
+texture_under = ExtResource( 37 )
 texture_over = null
-texture_progress = ExtResource( 37 )
+texture_progress = ExtResource( 38 )
 radial_fill_degrees = 360.0
 radial_center_offset = Vector2( 0, 0 )
 nine_patch_stretch = false

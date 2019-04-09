@@ -1,6 +1,7 @@
 extends "res://HitBox.gd"
 
-onready var _sprite = $PunchSprite
+onready var _anim = $PunchAnim
+#onready var _sprite = $PunchSprite
 var alpha = 0.5
 
 func _ready():
@@ -9,7 +10,11 @@ func _ready():
 
 func init(start_pos, strength, life_time=0.5, size=1, color = Color(1,1,1)):
 	.init(start_pos, strength, life_time, size, color)
-	_sprite.modulate = Color(_color[0], _color[1], _color[2], alpha)
+	#_sprite.modulate = Color(_color[0], _color[1], _color[2], alpha)
+	_anim.modulate = color
+	_anim.scale.x *= size
+	_anim.play()
+	
 
 func on_area_entered(area):
 	# duck type check if area is a fireball

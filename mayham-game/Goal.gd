@@ -11,7 +11,8 @@ var color = _random_color()
 
 onready var core = $Fire/particles_main
 onready var tail = $Fire/particles_tail
-onready var ring = $Ring
+onready var ring = $RingAnim/Ring
+onready var aura = $Aura
 
 func init(players):
 	var player_list = ResourceLoader.load("res://PlayerLinkedList.gd")
@@ -76,6 +77,10 @@ func change_color():
 
 func _random_color():
 	randomize()
+	var colors = [Color(0.7,0.0,1.0), Color(0.4,1.0,0.4), Color(0.0,0.7,1.0), Color(0.8,0.8,0.8)]
+	var rand = randi()%colors.size()
+	return colors[rand]
+	
 	var list = [1.0, 0.7, 0.0]
 	if randi()%2 == 0:
 		list = [1.0, 0.5, 0.2]
@@ -91,9 +96,11 @@ func _random_color():
 func set_color(color):
 	var x = 2
 	var y = 0
-	var a = 0.6
+	var a = 0.7
 	
-	var core_col = Color( (color[0]*x-y)/(x+y), (color[1]*x-y)/(x+y), (color[2]*x-y)/(x+y), a )
-	core.modulate = core_col
+	#var core_col = Color( (color[0]*x-y)/(x+y), (color[1]*x-y)/(x+y), (color[2]*x-y)/(x+y), a )
+	core.modulate = Color( color[0], color[1], color[2], a)
 	tail.modulate = Color( color[0], color[1], color[2], a)
-	ring.modulate = Color( color[0], color[1], color[2], 0.3)
+	ring.modulate = Color( color[0], color[1], color[2], a*0.75)
+	ring.position = position
+	aura.modulate = Color( color[0], color[1], color[2], a*0.5)
