@@ -39,32 +39,32 @@
 [ext_resource path="res://SpecialProgressBack.png" type="Texture" id=37]
 [ext_resource path="res://SpecialProgress.png" type="Texture" id=38]
 
-[sub_resource type="Gradient" id=5]
+[sub_resource type="Gradient" id=1]
 
 offsets = PoolRealArray( 0, 1 )
 colors = PoolColorArray( 1, 1, 1, 0.480667, 0.996094, 0.996094, 0.996094, 0 )
 
-[sub_resource type="GradientTexture" id=6]
+[sub_resource type="GradientTexture" id=2]
 
 flags = 4
-gradient = SubResource( 5 )
+gradient = SubResource( 1 )
 width = 2048
 _sections_unfolded = [ "Resource" ]
 
-[sub_resource type="Curve" id=7]
+[sub_resource type="Curve" id=3]
 
 min_value = 0.0
 max_value = 1.0
 bake_resolution = 100
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.489258 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=8]
+[sub_resource type="CurveTexture" id=4]
 
 flags = 4
 width = 2048
-curve = SubResource( 7 )
+curve = SubResource( 3 )
 
-[sub_resource type="ParticlesMaterial" id=4]
+[sub_resource type="ParticlesMaterial" id=5]
 
 render_priority = 0
 trail_divisor = 1
@@ -93,8 +93,8 @@ angle = 0.0
 angle_random = 0.0
 scale = 0.26
 scale_random = 0.0
-scale_curve = SubResource( 8 )
-color_ramp = SubResource( 6 )
+scale_curve = SubResource( 4 )
+color_ramp = SubResource( 2 )
 hue_variation = 0.0
 hue_variation_random = 0.0
 anim_speed = 0.0
@@ -104,7 +104,7 @@ anim_offset_random = 0.0
 anim_loop = false
 _sections_unfolded = [ "Color", "Gravity", "Scale", "Trail" ]
 
-[sub_resource type="SpriteFrames" id=1]
+[sub_resource type="SpriteFrames" id=6]
 
 animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 28 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ) ],
@@ -113,12 +113,12 @@ animations = [ {
 "speed": 50.0
 } ]
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=7]
 
 custom_solver_bias = 0.0
 radius = 32.0618
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=8]
 
 size = 20
 use_mipmaps = false
@@ -135,7 +135,16 @@ collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
 
-[node name="Trail" type="Particles2D" parent="." index="0"]
+[node name="Sfx" type="AudioStreamPlayer" parent="." index="0"]
+
+stream = null
+volume_db = -10.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="Trail" type="Particles2D" parent="." index="1"]
 
 emitting = true
 amount = 5
@@ -150,44 +159,44 @@ fract_delta = true
 visibility_rect = Rect2( -100, -100, 200, 200 )
 local_coords = false
 draw_order = 0
-process_material = SubResource( 4 )
+process_material = SubResource( 5 )
 texture = ExtResource( 2 )
 normal_map = null
 h_frames = 1
 v_frames = 1
 _sections_unfolded = [ "Drawing", "Process Material", "Textures", "Time", "Transform" ]
 
-[node name="PlayerAnim" type="AnimatedSprite" parent="." index="1"]
+[node name="PlayerAnim" type="AnimatedSprite" parent="." index="2"]
 
 visible = false
 scale = Vector2( 0.13, 0.13 )
-frames = SubResource( 1 )
+frames = SubResource( 6 )
 animation = "run"
 _sections_unfolded = [ "Transform", "Visibility" ]
 
-[node name="PlayerSprite" type="Sprite" parent="." index="2"]
+[node name="PlayerSprite" type="Sprite" parent="." index="3"]
 
 scale = Vector2( 0.18, 0.18 )
 texture = ExtResource( 33 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="Bubble" type="Sprite" parent="." index="3"]
+[node name="Bubble" type="Sprite" parent="." index="4"]
 
 scale = Vector2( 0.16, 0.16 )
 texture = ExtResource( 34 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="Bubble_s" type="Sprite" parent="." index="4"]
+[node name="Bubble_s" type="Sprite" parent="." index="5"]
 
 scale = Vector2( 0.16, 0.16 )
 texture = ExtResource( 35 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="PlayerCollision" type="CollisionShape2D" parent="." index="5"]
+[node name="PlayerCollision" type="CollisionShape2D" parent="." index="6"]
 
-shape = SubResource( 2 )
+shape = SubResource( 7 )
 
-[node name="ScoreLabel" type="Label" parent="." index="6"]
+[node name="ScoreLabel" type="Label" parent="." index="7"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -203,7 +212,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 8 )
 text = "0"
 align = 1
 valign = 1
@@ -212,7 +221,7 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Margin", "custom_fonts" ]
 
-[node name="SpecialMeter" type="TextureProgress" parent="." index="7"]
+[node name="SpecialMeter" type="TextureProgress" parent="." index="8"]
 
 anchor_left = 0.0
 anchor_top = 0.0
