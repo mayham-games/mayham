@@ -9,6 +9,8 @@ var fire_generator
 onready var core = $CollisionShape2D_1/Particles2D
 onready var tail = $CollisionShape2D_1/Particles2D_tail
 
+onready var sfx = $Sfx
+
 func _ready():
 	set_process(true)
 	connect("body_entered", self, "on_body_entered")
@@ -23,25 +25,40 @@ func init(generator, direction, speed, power, size, color = Color(1,1,1)):
 	tail.rotation *= direction
 	scale *= size
 	set_color(color)
+	sfx.play(0)
 
 func _process(delta):
 	var speed_x = -1
 	var speed_y = 0
 	var motion = Vector2(speed_x * sign(fire_direction), speed_y) * fireball_speed
 	position += motion * delta
+	
+	var screen = get_viewport_rect().size
+
+	if position.x < 0:
+		sfx.stop()
+	elif position.x >= screen.x:
+		sfx.stop()
+	if position.y < 0:
+		sfx.stop()
+	elif position.y >= screen.y:
+		sfx.stop()
 
 func _on_VisibilityNotifier2D_exit_screen():
+	sfx.stop()
 	queue_free()
 
 func on_body_entered( body ):
 	if body.get_class() == "KinematicBody2D" and body != fire_generator:
 		body.position_hit(fire_power, position)
+		sfx.stop()
 		queue_free()
 		
 func on_area_entered(area):
 	# duck type check if area is a fireball
 	if 'fire_generator' in area:
 		if area.fire_generator != fire_generator:
+			sfx.stop()
 			queue_free()
 
 func set_color(color):
