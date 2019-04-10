@@ -70,6 +70,13 @@ const P_GREEN = Color( 0.0, 0.8, 0.4, 1 )
 const P_PURP  = Color( 0.6, 0.2, 1.0, 1 )
 onready var _player_color = P_BLUE
 
+# Sound Effects
+onready var sfx = $Sfx
+onready var s_jmp = ResourceLoader.load("res://sounds/jump7.wav")
+onready var s_hit = ResourceLoader.load("res://sounds/hit4.wav")
+onready var s_atk = ResourceLoader.load("res://sounds/atk3.wav")
+onready var s_dsh = ResourceLoader.load("res://sounds/dash5.wav")
+
 # Nodes
 onready var score_label = $ScoreLabel
 onready var special_meter = $SpecialMeter
@@ -217,6 +224,8 @@ func _execute_player_dash():
 		var dash_box = DASH_BOX_SCENE.instance()
 		add_child(dash_box)
 		dash_box.init(NO_DIR, DASH_POWER, DASH_COOLDOWN)
+		sfx.stream = s_dsh
+		sfx.play(0)
 
 func _execute_player_jump():
 	if curr_world_state == WORLD_STATE.air_walled and wall_jump_cnt < MAX_WALL_JUMP_CNT:
@@ -226,9 +235,13 @@ func _execute_player_jump():
 		last_input_direction = -last_input_direction
 		wall_jump_cnt += 1
 		cooldown_time += WALL_JUMP_COOLDOWN
+		sfx.stream = s_jmp
+		sfx.play(0)
 	elif jump_cnt < MAX_JUMP_CNT:
 		curr_velocity.y = JUMP_STRENGTH
 		jump_cnt += 1
+		sfx.stream = s_jmp
+		sfx.play(0)
 
 func _execute_player_left():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
@@ -257,6 +270,8 @@ func _execute_player_attack():
 	var punch_box = PUNCH_BOX_SCENE.instance()
 	add_child(punch_box)
 	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN, _sprite.scale.x/_sprite_scale, _player_color)
+	sfx.stream = s_atk
+	sfx.play(0)
 
 func _execute_player_special():
 	if special_cooldown_timer == 0:
@@ -397,6 +412,8 @@ func increment_score_by(number):
 	_update_score_label()
 
 func vector_hit(power, vector):
+	sfx.stream = s_hit
+	sfx.play(0)
 	if curr_world_state == WORLD_STATE.grounded:
 		vector.y = abs(vector.y)*-1 - 1.0
 	#print(vector)
