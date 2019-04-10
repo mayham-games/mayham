@@ -12,6 +12,7 @@ onready var goal_interval = _goal_max - _goal_min
 onready var goal_move_time = goal_interval
 onready var field = ResourceLoader.load("res://FlatMap.tscn")
 onready var fantasy = ResourceLoader.load("res://Mortal Engines.tscn")
+onready var music = $Music
 
 var _timer = null
 var _map = null
@@ -39,6 +40,9 @@ func _ready():
 	_timer.set_wait_time(1.0)
 	_timer.set_one_shot(false) # Make sure it loops
 	_timer.start()
+	
+	# disable to turn off music
+	music.play(0)
 
 func _on_Timer_timeout():
 	if goal_move_time == 0:
