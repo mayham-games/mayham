@@ -385,7 +385,7 @@ valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Anchor", "Focus", "Grow Direction", "Hint", "Margin", "Material", "Mouse", "Pause", "Rect", "Size Flags", "Theme", "Visibility", "custom_colors", "custom_fonts", "custom_styles" ]
+_sections_unfolded = [ "Focus", "Hint", "Material", "Mouse", "Pause", "Size Flags", "Theme", "Visibility", "custom_colors", "custom_fonts", "custom_styles" ]
 
 [node name="GoalPosition1" type="Position2D" parent="." index="4"]
 
