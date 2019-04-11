@@ -58,10 +58,8 @@ var hit_slow = Vector2()		# decay factor for hit_momentum
 
 # ART / ANIMATION
 onready var _bubble = $Bubble
-onready var _sprite = $PlayerSprite
+onready var _sprite = $PlayerAnim
 onready var _sprite_scale = _sprite.scale.x
-onready var anim = $PlayerAnim		# animation of player sprite
-onready var anim_scale = anim.scale.x
 onready var _trail = $Trail
 
 const P_BLUE  = Color( 0.0, 0.7, 1.0, 1 )
@@ -139,9 +137,10 @@ func _ready():
 	_player_color = self._random_color()
 	_bubble.modulate = _player_color
 	_trail.modulate = _player_color
+	_sprite.connect("animation_finished", self, "_animation")
+	_animation()
 
 	print(position)
-	#anim.show()
 	score_label.add_color_override("font_color",Color(1,1,1,1))
 	score_label.add_color_override("font_color_shadow",Color(0,0,0,1))
 	
@@ -226,6 +225,7 @@ func _execute_player_dash():
 		dash_box.init(NO_DIR, DASH_POWER, DASH_COOLDOWN)
 		sfx.stream = s_dsh
 		sfx.play(0)
+		_animation("dash")
 
 func _execute_player_jump():
 	if curr_world_state == WORLD_STATE.air_walled and wall_jump_cnt < MAX_WALL_JUMP_CNT:
@@ -247,20 +247,14 @@ func _execute_player_left():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
 		_sprite.scale.x = -_sprite_scale
-		#anim.scale.x = -anim_scale
-		#if not anim.is_playing():
-			#anim.play()
-
+	
 	last_input_direction = LEFT_DIR
 
 func _execute_player_right():
 	if curr_action_state == ACTION_STATE.idle or curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.move
 		_sprite.scale.x = _sprite_scale
-		#anim.scale.x = anim_scale
-		#if not anim.is_playing():
-			#anim.play()
-
+	
 	last_input_direction = RIGHT_DIR
 
 func _execute_player_attack():
@@ -272,6 +266,7 @@ func _execute_player_attack():
 	punch_box.init(sign(last_input_direction.x) * ATTACK_OFFSET, ATTACK_POWER, ATTACK_COOLDOWN, _sprite.scale.x/_sprite_scale, _player_color)
 	sfx.stream = s_atk
 	sfx.play(0)
+	_animation("attack")
 
 func _execute_player_special():
 	if special_cooldown_timer == 0:
@@ -284,13 +279,12 @@ func _execute_player_special():
 		special_cooldown_timer = SPECIAL_COOLDOWN
 		special_meter.visible = true
 		special_meter.value = (1 - special_cooldown_timer / SPECIAL_COOLDOWN) * special_meter.max_value
-
+		_animation("fire")
 
 
 func _execute_player_stop():
 	if curr_action_state == ACTION_STATE.move:
 		curr_action_state = ACTION_STATE.idle
-		#anim.stop()			#Jordan
 
 func _update_world_state():
 	if curr_world_state == WORLD_STATE.grounded and !is_on_floor():
@@ -372,7 +366,6 @@ func _physics_process(delta):
 		curr_velocity.x = sign(curr_velocity.x) * min(abs(curr_velocity.x), GROUND_SPEED)
 	elif curr_action_state == ACTION_STATE.idle:
 		curr_velocity.x = NO_DIR.x
-		#anim.stop()
 	elif curr_action_state == ACTION_STATE.knock_back:
 		curr_velocity = hit_momentum
 		hit_momentum.x -= hit_slow.x*delta
@@ -421,7 +414,6 @@ func vector_hit(power, vector):
 	stun_cooldown = STUN_COOLDOWN*(power/10)
 	curr_input_state = INPUT_STATE.hit
 	curr_action_state = ACTION_STATE.knock_back
-	anim.stop()
 	hit_momentum = (vector*10*(power) + curr_velocity).clamped(TERMINAL_HIT_VELOCITY)
 	hit_slow = hit_momentum*(10/(STUN_COOLDOWN*power))
 	#curr_velocity.y = hit_momentum.y
@@ -462,3 +454,16 @@ func _random_color():
 	list.remove(x)
 	var c3 = list[0]
 	return Color(c1,c2,c3)
+
+func _animation(anim = ""):
+	#print (anim,_sprite.animation, _sprite.is_playing()) 
+	if anim == "attack":
+		_sprite.play("attack")
+	elif anim == "fire":
+		_sprite.play("fire")
+	elif anim == "fire":
+		_sprite.play("fire")
+	elif anim == "dash":
+		_sprite.play("dash")
+	else:
+		_sprite.play("idle")
