@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Mayham - Bacon Smooth.ogg-8b9740c73f97c594974d7a72697b84a5.oggstr"
+
+[deps]
+
+source_file="res://music/Mayham - Bacon Smooth.ogg"
+dest_files=[ "res://.import/Mayham - Bacon Smooth.ogg-8b9740c73f97c594974d7a72697b84a5.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
