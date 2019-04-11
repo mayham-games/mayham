@@ -61,12 +61,12 @@ func _move_goal():
 func _process(delta):
 	# Called every frame. Delta is time since last frame.
 	# Update game logic here.
-	#if _map.has_winner(winning_score) or time_remaining <= 0:
-		#end_game()
+	if _map.has_winner(winning_score) or time_remaining <= 0:
+		_end_game()
 	pass
 
 #This is a work in progress... not completed
-func end_game():
+func _end_game():
 	var score_board = _map.collect_players()
 
 func makeColors(num_players):
