@@ -132,11 +132,6 @@ func _ready():
 	controller.connect("action_attack", self, "_on_player_attack")
 	controller.connect("action_special", self, "_on_player_special")
 
-	# set player color
-	# _bubble.modulate = P_BLUE
-	_player_color = self._random_color()
-	_bubble.modulate = _player_color
-	_trail.modulate = _player_color
 	_sprite.connect("animation_finished", self, "_animation")
 	_animation()
 
@@ -150,9 +145,10 @@ func _ready():
 	special_meter.value = (1 - special_cooldown_timer / SPECIAL_COOLDOWN) * special_meter.max_value
 	special_meter.update()
 
-func init(number, position_x):
+func init(number, position_x, color = P_BLUE):
 	_number = number
 	self.position.x += position_x
+	set_color(color)
 
 func _on_player_start():
 	print("START")
@@ -438,6 +434,7 @@ func create_fireball():
 	fireball.position = position + Vector2(10 * sign(last_input_direction.x), 0)
 
 func set_color(color):
+	_player_color = color
 	_bubble.modulate = color
 	_trail.modulate = color
 	
