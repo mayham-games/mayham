@@ -13,6 +13,7 @@ onready var goal_move_time = goal_interval
 onready var field = ResourceLoader.load("res://FlatMap.tscn")
 onready var fantasy = ResourceLoader.load("res://Mortal Engines.tscn")
 onready var music = $Music
+var victory_screen = preload("res://VictoryScreen.tscn");
 
 var _timer = null
 var _map = null
@@ -68,32 +69,4 @@ func _process(delta):
 #This is a work in progress... not completed
 func _end_game():
 	var score_board = _map.collect_players()
-
-func makeColors(num_players):
-	var colors = []
-	for i in range(num_players):
-		var color = _random_color()
-		while not checkColor(color, colors):
-			color = _random_color()
-		colors.append(color)
-	return colors
-
-func checkColor(color, colorArray):
-	for i in range(colorArray.size()):
-		if color == colorArray[i]:
-			return false
-	return true
-
-func _random_color():
-	randomize()
-	var list = [1.0, 0.7, 0.0]
-	if randi()%2 == 0:
-		list = [1.0, 0.5, 0.2]
-	var x = randi()%list.size()
-	var c1 = list[x]
-	list.remove(x)
-	x = randi()%list.size()
-	var c2 = list[x]
-	list.remove(x)
-	var c3 = list[0]
-	return Color(c1,c2,c3)
+	get_tree().change_scene_to(victory_screen);
