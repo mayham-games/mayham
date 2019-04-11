@@ -27,6 +27,8 @@ const BUTTON_INDEX = "button_index"
 const MOTION_AXIS = "axis"
 const MOTION_AXIS_VALUE = "axis_value"
 
+const P_BLUE  = Color( 0.0, 0.7, 1.0, 1 )
+
 const DEFAULT_CONTROLS = {
 	ACTION_JUMP : {
 		INPUT_TYPE : INPUT_BUTTON,
@@ -62,9 +64,11 @@ const DEFAULT_CONTROLS = {
 
 var playerDoll = null
 var number = 0
+var color = P_BLUE
 
-func init(num):
+func init(num, col = P_BLUE):
 	number = num
+	color = col
 	_setupInputEvents(DEFAULT_CONTROLS)
 
 func _ready():
@@ -72,7 +76,7 @@ func _ready():
 	var player = ResourceLoader.load("res://Player.tscn")
 	playerDoll = player.instance()
 	add_child(playerDoll)
-	playerDoll.init(number, position_x)
+	playerDoll.init(number, position_x, color)
 	print("PC ready ", number)
 
 func _setupInputEvents(controls):
