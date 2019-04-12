@@ -23,15 +23,11 @@ func _ready():
 	var game = fantasy
 	_map = game.instance()
 	add_child(_map)
-	var playerController = ResourceLoader.load("res://PlayerController.tscn")
-	var players = []
-	var colors = makeColors(num_players)
-	for i in range(num_players):
-		var playerControl = playerController.instance()
-		playerControl.init(i+1, colors[i])
-		add_child(playerControl)
-		players.append(playerControl.get_player())
-	_map.init(players)
+
+	GlobalStorage.init_players(num_players)
+	for pc in GlobalStorage.player_controllers:
+		add_child(pc)
+	_map.init()
 	
 	# set the time limit
 	time_remaining = time_limit
@@ -68,5 +64,4 @@ func _process(delta):
 
 #This is a work in progress... not completed
 func _end_game():
-	var score_board = _map.collect_players()
 	get_tree().change_scene_to(victory_screen);
