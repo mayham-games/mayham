@@ -1,12 +1,27 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://PunchBox.gd" type="Script" id=1]
-[ext_resource path="res://ring.png" type="Texture" id=2]
+[ext_resource path="res://falcon/f_0.png" type="Texture" id=2]
+[ext_resource path="res://falcon/f_1.png" type="Texture" id=3]
+[ext_resource path="res://falcon/f_2.png" type="Texture" id=4]
+[ext_resource path="res://falcon/f_3.png" type="Texture" id=5]
+[ext_resource path="res://falcon/f_4.png" type="Texture" id=6]
+[ext_resource path="res://falcon/f_5.png" type="Texture" id=7]
+[ext_resource path="res://falcon/f_6.png" type="Texture" id=8]
 
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
 radius = 13.0
+
+[sub_resource type="SpriteFrames" id=2]
+
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": false,
+"name": "default",
+"speed": 60.0
+} ]
 
 [node name="PunchBox" type="Area2D" index="0"]
 
@@ -27,11 +42,11 @@ position = Vector2( 8.60548e-07, 1.6455e-06 )
 scale = Vector2( 2.46154, 2.46154 )
 shape = SubResource( 1 )
 
-[node name="PunchSprite" type="Sprite" parent="." index="1"]
+[node name="PunchAnim" type="AnimatedSprite" parent="." index="1"]
 
-position = Vector2( -1, -1 )
-scale = Vector2( 0.16, 0.16 )
-texture = ExtResource( 2 )
+scale = Vector2( 0.3, 0.3 )
+frames = SubResource( 2 )
+animation = "default"
 _sections_unfolded = [ "Transform" ]
 
 

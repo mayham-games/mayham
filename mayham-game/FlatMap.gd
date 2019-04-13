@@ -15,6 +15,7 @@ func _ready():
 func move_goal():
 	var index = randi() % goal_positions.size()
 	goal.position = goal_positions[index].position
+	goal.change_color()
 
 
 func award_points():
