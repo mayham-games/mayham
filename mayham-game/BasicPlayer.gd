@@ -41,6 +41,7 @@ const FIREBALL_POWER = 100
 const FIREBALL_SCALE = 2
 const PUNCH_BOX_SCENE = preload("res://PunchBox.tscn")
 const DASH_BOX_SCENE = preload("res://DashBox.tscn")
+const TIME_WIN_LIMIT = 50
 
 # Variables
 var wall_jump_cnt = 0
@@ -390,7 +391,11 @@ func get_score():
 	return _score
 
 func _update_score_label():
-	score_label.text = str(_score)
+	if _score < TIME_WIN_LIMIT:
+		score_label.text = str(_score)
+	else:
+		score_label.text = "WINNER"
+	
 
 func increment_score_by(number):
 	_score += number
