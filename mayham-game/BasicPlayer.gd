@@ -16,7 +16,7 @@ const GROUND_SPEED = 200 # speed that the player moves on the ground
 const JUMP_STRENGTH = -550 # metric for calculating jump height and duration
 const MASS = 425 # mass metric for push back calculations
 const DASH_SPEED = 800 # speed that the player moves when dashing
-const DASH_POWER = 200 # strength of the hit when the player is dashing
+const DASH_POWER = 100 # strength of the hit when the player is dashing
 const WALL_JUMP_SPEED = 400 # speed the player moves away from a wall when wall jumping
 const WALL_JUMP_DECAY = 0.85
 # Variables
@@ -27,7 +27,7 @@ var curr_velocity = Vector2(0, 0)
 const MAX_WALL_JUMP_CNT = 5 # Max number of times a player can wall jump before needing to touch the ground again
 const MAX_DASH_CNT = 2 # Max number of times a player can dash before needing to touch the ground
 const MAX_JUMP_CNT = 2 # Max number of times a player can jump until needing to touch the ground
-const ATTACK_POWER = 75 # Strength of a players attack
+const ATTACK_POWER = 150 # Strength of a players attack
 const ATTACK_COOLDOWN = 0.15 # number of secs until input from controller will be accepted after attacking
 const ATTACK_OFFSET = Vector2(30, 0) # how far away from the player the punch hitbox should appear
 const STUN_COOLDOWN = 0.05 # constant for number of secs until input from controller will be accepted after getting hit
@@ -36,7 +36,7 @@ const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be 
 const SPECIAL_COOLDOWN = 1.0 # number of secs until the player can use its special can be used again
 const FIREBALL_SCENE = preload("Fireball.tscn")
 const FIREBALL_SPEED = 400
-const FIREBALL_POWER = 100
+const FIREBALL_POWER = 200
 const FIREBALL_SCALE = 2
 const PUNCH_BOX_SCENE = preload("res://PunchBox.tscn")
 const DASH_BOX_SCENE = preload("res://DashBox.tscn")
@@ -379,6 +379,16 @@ func _physics_process(delta):
 
 	# move
 	move_and_slide(curr_velocity, UP_DIR)
+
+	if position.x < 0:
+		position.x = get_viewport().size.x
+	elif position.x > get_viewport().size.x:
+		position.x = 0
+	
+	if position.y < 0:
+		position.y = get_viewport().size.y
+	elif position.y > get_viewport().size.y:
+		position.y = 0
 
 	_update_world_state()
 
