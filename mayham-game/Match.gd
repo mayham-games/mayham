@@ -11,7 +11,10 @@ onready var _goal_min = 10
 onready var goal_interval = _goal_max - _goal_min
 onready var goal_move_time = goal_interval
 onready var field = ResourceLoader.load("res://FlatMap.tscn")
-onready var fantasy = ResourceLoader.load("res://Mortal Engines.tscn")
+onready var forest = ResourceLoader.load("res://Forest.tscn")
+onready var frion = ResourceLoader.load("res://Frion.tscn")
+onready var Wasteland = ResourceLoader.load("res://Wasteland.tscn")
+onready var twoghlight = ResourceLoader.load("res://Twighlight.tscn")
 onready var music = $Music
 
 var _timer = null
@@ -19,7 +22,7 @@ var _map = null
 
 func _ready():
 	# Add the players
-	var game = fantasy
+	var game = forest
 	_map = game.instance()
 	add_child(_map)
 	var playerController = ResourceLoader.load("res://PlayerController.tscn")
