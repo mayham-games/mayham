@@ -72,7 +72,7 @@ func init(num, col = P_BLUE):
 	_setupInputEvents(DEFAULT_CONTROLS)
 
 func _ready():
-	var position_x = 100 * (number + 10) # (number - 5)
+	var position_x = 200 + ((3 - number) * 100) # (number - 5)
 	var player = ResourceLoader.load("res://Player.tscn")
 	playerDoll = player.instance()
 	add_child(playerDoll)

@@ -205,7 +205,7 @@ flatness = 0.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 1.0
 initial_velocity_random = 0.0
-angular_velocity = 4.55828e-41
+angular_velocity = 4.55828e-041
 angular_velocity_random = 0.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
@@ -232,7 +232,7 @@ anim_offset_random = 0.0
 anim_loop = false
 _sections_unfolded = [ "Animation", "Color", "Gravity", "Initial Velocity", "Scale" ]
 
-[node name="FlatMap" type="Node" index="0"]
+[node name="FlatMap" type="Node"]
 
 script = ExtResource( 1 )
 
