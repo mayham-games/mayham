@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/a_mayham2.wav-79a0c1705f018b22f7ce7ce2d2c8236b.sample"
+
+[deps]
+
+source_file="res://sounds/a_mayham2.wav"
+dest_files=[ "res://.import/a_mayham2.wav-79a0c1705f018b22f7ce7ce2d2c8236b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

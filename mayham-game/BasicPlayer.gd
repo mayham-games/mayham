@@ -16,7 +16,7 @@ const GROUND_SPEED = 200 # speed that the player moves on the ground
 const JUMP_STRENGTH = -550 # metric for calculating jump height and duration
 const MASS = 425 # mass metric for push back calculations
 const DASH_SPEED = 800 # speed that the player moves when dashing
-const DASH_POWER = 75 # strength of the hit when the player is dashing
+const DASH_POWER = 100 # strength of the hit when the player is dashing
 const WALL_JUMP_SPEED = 400 # speed the player moves away from a wall when wall jumping
 const WALL_JUMP_DECAY = 0.85
 const TERMINAL_HIT_VELOCITY = 1500 # max knockback velocity
@@ -37,7 +37,7 @@ const DASH_COOLDOWN = 0.25 # number of secs until input from controller will be 
 const SPECIAL_COOLDOWN = 1.0 # number of secs until the player can use its special can be used again
 const FIREBALL_SCENE = preload("Fireball.tscn")
 const FIREBALL_SPEED = 400
-const FIREBALL_POWER = 100
+const FIREBALL_POWER = 200
 const FIREBALL_SCALE = 2
 const PUNCH_BOX_SCENE = preload("res://PunchBox.tscn")
 const DASH_BOX_SCENE = preload("res://DashBox.tscn")
@@ -90,7 +90,8 @@ enum INPUT_STATE {
 enum WORLD_STATE {
 	grounded,
 	airborne,
-	air_walled
+	air_walled,
+	air_capped
 }
 enum ACTION_STATE {
 	idle,
@@ -163,8 +164,8 @@ func _print_debug():
 		INPUT_STATE.cooldown:
 			print("\tcooldown ", cooldown_time)
 		INPUT_STATE.hit:
-			print("\thit", stun_cooldown)
-
+			print("\thit ", stun_cooldown, " ", hit_momentum)
+	
 	print("World state:")
 	match curr_world_state:
 		WORLD_STATE.grounded:
@@ -173,7 +174,9 @@ func _print_debug():
 			print("\tairborne")
 		WORLD_STATE.air_walled:
 			print("\tair_walled")
-
+		WORLD_STATE.air_capped:
+			print("\tair_capped")
+	
 	print("Action state:")
 	match curr_action_state:
 		ACTION_STATE.idle:
@@ -285,14 +288,18 @@ func _execute_player_stop():
 
 func _update_world_state():
 	if curr_world_state == WORLD_STATE.grounded and !is_on_floor():
-		if is_on_wall():
+		if is_on_ceiling():
+			curr_world_state = WORLD_STATE.air_capped
+		elif is_on_wall():
 			curr_world_state = WORLD_STATE.air_walled
 		else:
 			curr_world_state = WORLD_STATE.airborne
 	elif !is_on_floor():
-		if curr_world_state == WORLD_STATE.airborne and is_on_wall():
+		if curr_world_state != WORLD_STATE.air_capped and is_on_ceiling():
+			curr_world_state = WORLD_STATE.air_capped
+		elif curr_world_state != WORLD_STATE.air_walled and is_on_wall() and !is_on_ceiling():
 			curr_world_state = WORLD_STATE.air_walled
-		elif curr_world_state == WORLD_STATE.air_walled and !is_on_wall():
+		elif curr_world_state != WORLD_STATE.airborne and !is_on_ceiling() and !is_on_wall():
 			curr_world_state = WORLD_STATE.airborne
 	elif curr_world_state != WORLD_STATE.grounded and is_on_floor():
 		curr_world_state = WORLD_STATE.grounded
@@ -367,24 +374,31 @@ func _physics_process(delta):
 		curr_velocity = hit_momentum
 		hit_momentum.x -= hit_slow.x*delta
 		hit_momentum.y -= hit_slow.y*delta
-
+		
+		if curr_world_state == WORLD_STATE.air_walled:
+			curr_velocity.x *= -1
+			hit_momentum.x *= -1
+		if  curr_world_state == WORLD_STATE.air_capped or curr_world_state == WORLD_STATE.grounded:
+			curr_velocity.y *= -1
+			hit_momentum.y *= -1
+	
 	if curr_world_state != WORLD_STATE.grounded and curr_action_state != ACTION_STATE.dash:
 		curr_velocity.y = min(TERMINAL_GRAVITY_VELOCITY, curr_velocity.y + GRAVITY_ACCEL)
 
-	# wrap-around screen
-	var screen = get_viewport_rect().size
-
-	if position.x < 0:
-		position.x += screen.x
-	elif position.x >= screen.x:
-		position.x -= screen.x
-	if position.y < 0:
-		position.y += screen.y
-	elif position.y >= screen.y:
-		position.y -= screen.y
-
+	
 	# move
 	move_and_slide(curr_velocity, UP_DIR)
+	
+	# wrap-around screen
+	if position.x < 0:
+		position.x = get_viewport().size.x
+	elif position.x > get_viewport().size.x:
+		position.x = 0
+	
+	if position.y < 0:
+		position.y = get_viewport().size.y
+	elif position.y > get_viewport().size.y:
+		position.y = 0
 
 	_update_world_state()
 
