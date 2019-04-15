@@ -24,6 +24,7 @@ func on_area_entered(area):
 			area.fire_direction *= -1
 			area.core.rotation *= -1
 			area.tail.rotation *= -1
+			area.set_color(_color)
 	elif 'box_type' in area:
 		if area.box_type == DASH_BOX:
 			queue_free()
