@@ -14,7 +14,7 @@ onready var field = ResourceLoader.load("res://FlatMap.tscn")
 onready var forest = ResourceLoader.load("res://Forest.tscn")
 onready var frion = ResourceLoader.load("res://Frion.tscn")
 onready var Wasteland = ResourceLoader.load("res://Wasteland.tscn")
-onready var twoghlight = ResourceLoader.load("res://Twighlight.tscn")
+onready var twighlight = ResourceLoader.load("res://Twighlight.tscn")
 onready var music = $Music
 
 var _timer = null
