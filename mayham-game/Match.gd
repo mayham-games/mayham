@@ -2,7 +2,7 @@ extends Node
 
 # onready vars
 # game rules
-onready var num_players = 2
+onready var num_players = 5
 onready var time_limit = 180 # 3 min
 onready var time_remaining = time_limit
 onready var winning_score = 50
