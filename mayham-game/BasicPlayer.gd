@@ -384,21 +384,11 @@ func _physics_process(delta):
 	if curr_world_state != WORLD_STATE.grounded and curr_action_state != ACTION_STATE.dash:
 		curr_velocity.y = min(TERMINAL_GRAVITY_VELOCITY, curr_velocity.y + GRAVITY_ACCEL)
 
-	# wrap-around screen
-	var screen = get_viewport_rect().size
-
-	if position.x < 0:
-		position.x += screen.x
-	elif position.x > screen.x:
-		position.x -= screen.x
-	if position.y < 0:
-		position.y += screen.y
-	elif position.y > screen.y:
-		position.y -= screen.y
-
+	
 	# move
 	move_and_slide(curr_velocity, UP_DIR)
-
+	
+	# wrap-around screen
 	if position.x < 0:
 		position.x = get_viewport().size.x
 	elif position.x > get_viewport().size.x:
