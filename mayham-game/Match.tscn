@@ -3,7 +3,7 @@
 [ext_resource path="res://Match.gd" type="Script" id=1]
 [ext_resource path="res://music/Mayham - Bacon Smooth.ogg" type="AudioStream" id=2]
 
-[node name="Match" type="Node"]
+[node name="Match" type="Node" index="0"]
 
 script = ExtResource( 1 )
 

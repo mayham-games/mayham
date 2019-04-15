@@ -149,6 +149,7 @@ func _ready():
 func init(number, position_x, color = P_BLUE):
 	_number = number
 	self.position.x += position_x
+	self.position.y = 700
 	set_color(color)
 
 func _on_player_start():
