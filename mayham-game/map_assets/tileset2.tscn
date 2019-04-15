@@ -1,18 +1,26 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://map_assets/block_stone0_S.png" type="Texture" id=1]
+[ext_resource path="res://map_assets/Tiles/block_stone0_S.png" type="Texture" id=1]
+[ext_resource path="res://map_assets/Tiles/columnA_s2.png" type="Texture" id=2]
+[ext_resource path="res://map_assets/Tiles/columnC_s2.png" type="Texture" id=3]
+[ext_resource path="res://map_assets/Tiles/columnB_s2.png" type="Texture" id=4]
+[ext_resource path="res://map_assets/Tiles/block_stone0L_S2.png" type="Texture" id=5]
+[ext_resource path="res://map_assets/Tiles/block_stone0UR_S.png" type="Texture" id=6]
 
 [node name="Node" type="Node"]
 
 [node name="block_stone" type="Sprite" parent="." index="0"]
 
+editor/display_folded = true
 position = Vector2( 32, 32 )
 texture = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="StaticBody2D" type="StaticBody2D" parent="block_stone" index="0"]
 
-position = Vector2( 1.90735e-06, -1.90735e-06 )
-scale = Vector2( 1, 1 )
+position = Vector2( 1.90735e-006, -1.90735e-006 )
 input_pickable = false
 collision_layer = 1
 collision_mask = 1
@@ -25,5 +33,82 @@ bounce = 0.0
 
 build_mode = 0
 polygon = PoolVector2Array( -32, 32, -32, -32, 32, -32, 32, 32 )
+
+[node name="columna" type="Sprite" parent="." index="1"]
+
+position = Vector2( 236.056, 32 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="columnc" type="Sprite" parent="." index="2"]
+
+position = Vector2( 235.516, 160.528 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="columnb" type="Sprite" parent="." index="3"]
+
+position = Vector2( 235.947, 96.3433 )
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="block_stone2" type="Sprite" parent="." index="4"]
+
+editor/display_folded = true
+position = Vector2( 32, 96 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="block_stone2" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="block_stone2/StaticBody2D" index="0"]
+
+rotation = -1.56771
+build_mode = 0
+polygon = PoolVector2Array( -32, 32, -32, -32, 32, -32 )
+
+[node name="block_stone3" type="Sprite" parent="." index="5"]
+
+editor/display_folded = true
+position = Vector2( 32, 160 )
+texture = ExtResource( 6 )
+_sections_unfolded = [ "Transform" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="block_stone3" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="block_stone3/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( 32, 32, -32, -32, 32, -32 )
 
 

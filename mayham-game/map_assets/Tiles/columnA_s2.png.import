@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/block_stone0L_M.png-d1456016d46ca486b45d19dbf1676dfd.stex"
+path="res://.import/columnA_s2.png-560dbb65f90089099487177063e835a4.stex"
 
 [deps]
 
-source_file="res://map_assets/block_stone0L_M.png"
-dest_files=[ "res://.import/block_stone0L_M.png-d1456016d46ca486b45d19dbf1676dfd.stex" ]
+source_file="res://map_assets/Tiles/columnA_s2.png"
+dest_files=[ "res://.import/columnA_s2.png-560dbb65f90089099487177063e835a4.stex" ]
 
 [params]
 

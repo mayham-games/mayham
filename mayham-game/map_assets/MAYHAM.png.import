@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/columnC_m.png-356ec60fae32de2793ce0f286e2ea055.stex"
+path="res://.import/MAYHAM.png-ee3a11566f26275532af13ee41025cc4.stex"
 
 [deps]
 
-source_file="res://map_assets/columnC_m.png"
-dest_files=[ "res://.import/columnC_m.png-356ec60fae32de2793ce0f286e2ea055.stex" ]
+source_file="res://map_assets/MAYHAM.png"
+dest_files=[ "res://.import/MAYHAM.png-ee3a11566f26275532af13ee41025cc4.stex" ]
 
 [params]
 

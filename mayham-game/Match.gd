@@ -22,7 +22,7 @@ var _map = null
 
 func _ready():
 	# Add the players
-	var game = forest
+	var game = twighlight
 	_map = game.instance()
 	add_child(_map)
 	var playerController = ResourceLoader.load("res://PlayerController.tscn")

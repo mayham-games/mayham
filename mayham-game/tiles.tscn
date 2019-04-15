@@ -1,22 +1,50 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://map_assets/block_stone0_M.png" type="Texture" id=1]
+[ext_resource path="res://map_assets/Tiles/block_stone0_M.png" type="Texture" id=1]
+[ext_resource path="res://map_assets/Tiles/columnA_m.png" type="Texture" id=2]
+[ext_resource path="res://map_assets/Tiles/columnB_s2.png" type="Texture" id=3]
+[ext_resource path="res://map_assets/Tiles/columnC_s2.png" type="Texture" id=4]
+[ext_resource path="res://map_assets/Tiles/block_stone0L_M.png" type="Texture" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 24.7806, 19.9942 )
+extents = Vector2( 33.4727, 39.0398 )
 _sections_unfolded = [ "Resource" ]
+
+[sub_resource type="RectangleShape2D" id=3]
+
+custom_solver_bias = 0.0
+extents = Vector2( 318.508, 328.08 )
+
+[sub_resource type="RectangleShape2D" id=4]
+
+custom_solver_bias = 0.0
+extents = Vector2( 30.4373, 32.0001 )
+
+[sub_resource type="RectangleShape2D" id=5]
+
+custom_solver_bias = 0.0
+extents = Vector2( 1.94434, 10 )
+
+[sub_resource type="ConvexPolygonShape2D" id=2]
+
+custom_solver_bias = 0.0
+points = PoolVector2Array( 0, 0, 12, 0, 0, 9 )
 
 [node name="Node2D" type="Node2D"]
 
-position = Vector2( 31.5, 30 )
+position = Vector2( 31, 32 )
 scale = Vector2( 0.984375, 0.9375 )
 _sections_unfolded = [ "Material", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_horizontal_guides_": [ 3.0 ]
+}
 
 [node name="Stone Block" type="Sprite" parent="." index="0"]
 
-position = Vector2( -13.5388, -22.5872 )
+editor/display_folded = true
+position = Vector2( -9.14286, -29.8667 )
 scale = Vector2( 0.020453, 0.020646 )
 texture = ExtResource( 1 )
 _sections_unfolded = [ "Animation", "Material", "Offset", "Pause", "Region", "Transform", "Visibility", "Z Index" ]
@@ -32,5 +60,104 @@ _sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index"
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Stone Block4" type="Sprite" parent="." index="1"]
+
+editor/display_folded = true
+position = Vector2( -2.53968, -26.1333 )
+scale = Vector2( 0.00203175, 0.00213333 )
+texture = ExtResource( 2 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Pause", "Region", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stone Block4" index="0"]
+
+position = Vector2( 1.56274, 0 )
+shape = SubResource( 3 )
+_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Stone Block5" type="Sprite" parent="." index="2"]
+
+editor/display_folded = true
+position = Vector2( -0.540444, -27.1659 )
+scale = Vector2( 0.0168889, 0.0177333 )
+texture = ExtResource( 3 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Pause", "Region", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stone Block5" index="0"]
+
+position = Vector2( 1.56274, 0 )
+shape = SubResource( 4 )
+_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Stone Block6" type="Sprite" parent="." index="3"]
+
+position = Vector2( -3.04762, -28.8 )
+scale = Vector2( 0.0168889, 0.0177333 )
+texture = ExtResource( 4 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Pause", "Region", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stone Block6" index="0"]
+
+position = Vector2( -6.48499e-005, -7.62939e-006 )
+scale = Vector2( 12.1655, 4.62696 )
+shape = SubResource( 5 )
+_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index" ]
+
+[node name="Stone Block2" type="Sprite" parent="." index="4"]
+
+editor/display_folded = true
+position = Vector2( -9.14286, -25.6 )
+scale = Vector2( 0.0030815, 0.00178967 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Pause", "Region", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stone Block2" index="0"]
+
+position = Vector2( -244.02, 231.071 )
+rotation = -1.57079
+scale = Vector2( 35.7012, 46.9364 )
+shape = SubResource( 2 )
+_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Stone Block3" type="Sprite" parent="." index="5"]
+
+editor/display_folded = true
+position = Vector2( -7.09743, -27.6426 )
+rotation = 3.14159
+scale = Vector2( 0.0030815, 0.00178967 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Pause", "Region", "Transform", "Visibility", "Z Index" ]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stone Block3" index="0"]
+
+position = Vector2( -244.02, 231.071 )
+rotation = -1.57079
+scale = Vector2( 35.7012, 46.9364 )
+shape = SubResource( 2 )
+_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility", "Z Index" ]
 
 
