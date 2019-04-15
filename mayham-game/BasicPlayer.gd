@@ -389,11 +389,11 @@ func _physics_process(delta):
 
 	if position.x < 0:
 		position.x += screen.x
-	elif position.x >= screen.x:
+	elif position.x > screen.x:
 		position.x -= screen.x
 	if position.y < 0:
 		position.y += screen.y
-	elif position.y >= screen.y:
+	elif position.y > screen.y:
 		position.y -= screen.y
 
 	# move
